@@ -88,7 +88,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
   }, [])
 
   const pushUserInput = useCallback((text: string) => {
-    setBlocks(prev => [...prev, { kind: 'user', text }])
+    setBlocks(prev => [...prev, { kind: 'user', text, id: generateId() }])
   }, [])
 
   const handleCommandClick = useCallback((cmd: string) => {
@@ -351,7 +351,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           {blocks.map(block => {
             if (block.kind === 'user') {
               return (
-                <div key={block.id || block.text} className="flex items-start gap-2">
+                <div key={block.id} className="flex items-start gap-2">
                   <span className="text-terminal-accent font-mono text-[14px] shrink-0 mt-0.5">{'>'}</span>
                   <span className="font-mono text-[14px] text-terminal-fg">{block.text}</span>
                 </div>
