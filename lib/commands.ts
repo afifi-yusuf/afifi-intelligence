@@ -322,12 +322,21 @@ export const COMMAND_NAMES = Object.keys(COMMANDS).filter(
   k => !['sudo','rm','vim','exit','hack','hello','hire','coffee','secret','whoami','ls','pwd'].includes(k)
 )
 
+/** Tab completion — includes slash forms handled outside `COMMANDS` (e.g. /ask → LLM, /clear in Terminal). */
+export const COMPLETION_COMMAND_NAMES = [...COMMAND_NAMES, 'ask', 'clear'].sort((a, b) =>
+  a.localeCompare(b)
+)
+
 export function runCommand(input: string): OutputSegment[] | null {
   const trimmed = input.trim()
   if (!trimmed.startsWith('/')) return null
 
   const [rawCmd, ...rest] = trimmed.slice(1).split(' ')
   const cmd = rawCmd.toLowerCase()
+
+  if (cmd === '') {
+    return COMMANDS.help()
+  }
 
   // /ask is an alias for free-text
   if (cmd === 'ask') return null

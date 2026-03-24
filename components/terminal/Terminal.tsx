@@ -5,9 +5,16 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useMemo,
   KeyboardEvent,
 } from 'react'
-import { runCommand, WELCOME_SEGMENTS, COMMAND_NAMES, OutputBlock, OutputSegment } from '@/lib/commands'
+import {
+  runCommand,
+  WELCOME_SEGMENTS,
+  COMPLETION_COMMAND_NAMES,
+  OutputBlock,
+  OutputSegment,
+} from '@/lib/commands'
 import OutputRenderer from './OutputRenderer'
 import TerminalHeader from './TerminalHeader'
 
@@ -71,18 +78,32 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
     inputRef.current?.focus()
   }, [])
 
-  // Update autocomplete suggestions
+  // Slash-command completions: `/` lists all; `/pre` filters; stops at first space (first token only)
   useEffect(() => {
-    if (input.startsWith('/') && input.length > 1) {
-      const partial = input.slice(1).toLowerCase()
-      const matches = COMMAND_NAMES.filter(c => c.startsWith(partial))
-      setSuggestions(matches)
-      setSuggestionIndex(-1)
-    } else {
+    if (isStreaming || !input.startsWith('/') || input.slice(1).includes(' ')) {
       setSuggestions([])
       setSuggestionIndex(-1)
+      return
     }
-  }, [input])
+    const typed = input.length <= 1 ? '' : input.slice(1).toLowerCase()
+    const matches =
+      typed === ''
+        ? COMPLETION_COMMAND_NAMES
+        : COMPLETION_COMMAND_NAMES.filter(c => c.startsWith(typed))
+    setSuggestions(matches)
+    setSuggestionIndex(-1)
+  }, [input, isStreaming])
+
+  const ghostSuffix = useMemo(() => {
+    if (isStreaming || suggestions.length === 0) return ''
+    if (!input.startsWith('/') || input.slice(1).includes(' ')) return ''
+    const typed = input.length <= 1 ? '' : input.slice(1).toLowerCase()
+    if (typed === '' && suggestions.length > 1) return ''
+    const active =
+      suggestionIndex >= 0 ? suggestions[suggestionIndex]! : suggestions[0]!
+    if (!active.startsWith(typed)) return ''
+    return active.slice(typed.length)
+  }, [input, suggestions, suggestionIndex, isStreaming])
 
   const pushOutput = useCallback((segments: OutputSegment[]) => {
     setBlocks(prev => [...prev, { kind: 'output', segments, id: generateId() }])
@@ -278,9 +299,28 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         return
       }
 
-      // History navigation
+      // Accept inline ghost (fish/zsh-style)
+      if (e.key === 'ArrowRight' && ghostSuffix) {
+        e.preventDefault()
+        const typed = input.length <= 1 ? '' : input.slice(1).toLowerCase()
+        const active =
+          suggestionIndex >= 0 ? suggestions[suggestionIndex]! : suggestions[0]!
+        if (active.startsWith(typed)) {
+          setInput('/' + active)
+          if (suggestions.length <= 1) setSuggestions([])
+        }
+        return
+      }
+
+      // Cycle completions when menu is open; otherwise command history
       if (e.key === 'ArrowUp') {
         e.preventDefault()
+        if (suggestions.length > 0) {
+          setSuggestionIndex(i =>
+            i <= 0 ? suggestions.length - 1 : i - 1
+          )
+          return
+        }
         if (history.length === 0) return
         const newIndex = Math.min(historyIndex + 1, history.length - 1)
         setHistoryIndex(newIndex)
@@ -290,6 +330,12 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
       if (e.key === 'ArrowDown') {
         e.preventDefault()
+        if (suggestions.length > 0) {
+          setSuggestionIndex(i =>
+            i >= suggestions.length - 1 ? 0 : i + 1
+          )
+          return
+        }
         if (historyIndex <= 0) {
           setHistoryIndex(-1)
           setInput('')
@@ -316,7 +362,16 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         return
       }
     },
-    [executeInput, history, historyIndex, input, isStreaming, suggestions, suggestionIndex]
+    [
+      executeInput,
+      ghostSuffix,
+      history,
+      historyIndex,
+      input,
+      isStreaming,
+      suggestions,
+      suggestionIndex,
+    ]
   )
 
   return (
@@ -406,17 +461,27 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         className="shrink-0 border-t"
         style={{ borderColor: 'var(--terminal-border)' }}
       >
-        {/* Autocomplete suggestions */}
-        {suggestions.length > 1 && (
+        {/* Autocomplete — Tab / ↑↓ / click; ghost hint in input row */}
+        {suggestions.length > 0 && (
           <div
-            className="px-3 sm:px-4 py-1.5 flex gap-2 sm:gap-3 flex-wrap border-b"
+            className="px-3 sm:px-4 py-1.5 flex gap-2 sm:gap-3 flex-wrap border-b max-h-[8.5rem] overflow-y-auto terminal-scrollbar"
             style={{ borderColor: 'var(--terminal-border)', background: 'var(--terminal-surface)' }}
           >
-            {suggestions.map((s, i) => (
+            {suggestions.map((s, i) => {
+              const highlighted =
+                suggestionIndex >= 0
+                  ? suggestionIndex
+                  : suggestions.length === 1
+                    ? 0
+                    : -1
+              const isHi = i === highlighted
+              return (
               <span
                 key={s}
+                role="option"
+                aria-selected={isHi}
                 className={`font-mono text-[12px] transition-colors cursor-pointer ${
-                  i === suggestionIndex ? 'text-terminal-accent' : 'text-terminal-dim'
+                  isHi ? 'text-terminal-accent' : 'text-terminal-dim'
                 }`}
                 onClick={(e) => {
                   e.stopPropagation()
@@ -427,7 +492,8 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
               >
                 /{s}
               </span>
-            ))}
+              )
+            })}
           </div>
         )}
 
@@ -436,23 +502,38 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           onClick={(e) => e.stopPropagation()}
         >
           <span className="font-mono text-[13px] sm:text-[14px] text-terminal-accent shrink-0">{'>'}</span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={isStreaming}
-            autoFocus
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
-            aria-label="Terminal input"
-            placeholder={isStreaming ? '' : undefined}
-            className="flex-1 min-w-0 bg-transparent border-none outline-none font-mono text-[13px] sm:text-[14px] text-terminal-fg caret-terminal-accent placeholder:text-terminal-dim"
-            style={{ caretColor: 'var(--terminal-accent)' }}
-          />
+          <div className="relative flex-1 min-w-0 min-h-[1.35em] flex items-center">
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isStreaming}
+              autoFocus
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              aria-label="Terminal input"
+              aria-autocomplete={suggestions.length > 0 ? 'list' : undefined}
+              aria-expanded={suggestions.length > 0}
+              placeholder={isStreaming ? '' : undefined}
+              className={`absolute inset-0 w-full bg-transparent border-none outline-none font-mono text-[13px] sm:text-[14px] caret-terminal-accent placeholder:text-terminal-dim ${
+                ghostSuffix ? 'text-transparent' : 'text-terminal-fg'
+              }`}
+              style={{ caretColor: 'var(--terminal-accent)' }}
+            />
+            {ghostSuffix ? (
+              <div
+                className="pointer-events-none absolute inset-0 flex items-center font-mono text-[13px] sm:text-[14px] min-w-0 overflow-hidden whitespace-pre"
+                aria-hidden
+              >
+                <span className="text-terminal-fg shrink-0">{input}</span>
+                <span className="text-terminal-dim opacity-60 shrink-0">{ghostSuffix}</span>
+              </div>
+            ) : null}
+          </div>
           {isStreaming && (
             <span className="font-mono text-[12px] text-terminal-dim animate-pulse shrink-0">
               streaming...
