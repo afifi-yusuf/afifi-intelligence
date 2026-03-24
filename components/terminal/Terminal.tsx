@@ -12,7 +12,7 @@ import OutputRenderer from './OutputRenderer'
 import TerminalHeader from './TerminalHeader'
 
 const MAX_QUESTIONS = 20
-const MOBILE_CHIPS = ['/about', '/projects', '/skills', '/journey', '/contact', '/experience']
+const MOBILE_CHIPS = ['/help', '/about', '/projects', '/skills', '/journey', '/contact', '/experience']
 
 function generateId() {
   return Math.random().toString(36).slice(2)
@@ -329,11 +329,11 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
       {/* Terminal body */}
       <main
         ref={outputRef}
-        className="flex-1 min-h-0 overflow-y-auto px-3 py-3 sm:px-6 sm:py-4 scroll-smooth terminal-scrollbar"
+        className="flex-1 min-h-0 overflow-y-auto px-3 py-2 sm:px-4 sm:py-3 scroll-smooth terminal-scrollbar"
         aria-live="polite"
         aria-label="Terminal output"
       >
-        <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
+        <div className="w-full max-w-none space-y-1.5 sm:space-y-2">
           {blocks.map(block => {
             if (block.kind === 'user') {
               return (
@@ -345,7 +345,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
             }
             if (block.kind === 'output') {
               return (
-                <div key={block.id} className="pl-2 sm:pl-4 border-l-2 border-transparent">
+                <div key={block.id} className="pl-1 sm:pl-2 border-l-2 border-transparent">
                   <OutputRenderer
                     segments={block.segments}
                     onCommandClick={handleCommandClick}
@@ -355,21 +355,21 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
             }
             if (block.kind === 'thinking') {
               return (
-                <div key={block.id} className="pl-2 sm:pl-4">
+                <div key={block.id} className="pl-1 sm:pl-2">
                   <ThinkingIndicator />
                 </div>
               )
             }
             if (block.kind === 'streaming') {
               return (
-                <div key={block.id} className="pl-2 sm:pl-4">
+                <div key={block.id} className="pl-1 sm:pl-2">
                   <StreamingText text={block.text} done={block.done} />
                 </div>
               )
             }
             if (block.kind === 'system') {
               return (
-                <div key={block.id} className="pl-2 sm:pl-4">
+                <div key={block.id} className="pl-1 sm:pl-2">
                   <span className="font-mono text-[12px] sm:text-[13px] text-terminal-dim italic">{block.text}</span>
                 </div>
               )
@@ -378,7 +378,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           })}
         </div>
         {/* Bottom padding so last output isn't flush with input */}
-        <div className="h-4" />
+        <div className="h-2" />
       </main>
 
       {/* Mobile command chips */}
@@ -409,7 +409,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         {/* Autocomplete suggestions */}
         {suggestions.length > 1 && (
           <div
-            className="px-3 sm:px-6 py-2 flex gap-2 sm:gap-3 flex-wrap border-b"
+            className="px-3 sm:px-4 py-1.5 flex gap-2 sm:gap-3 flex-wrap border-b"
             style={{ borderColor: 'var(--terminal-border)', background: 'var(--terminal-surface)' }}
           >
             {suggestions.map((s, i) => (
@@ -432,7 +432,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         )}
 
         <div
-          className="flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-2.5 sm:py-3 bg-terminal-bg"
+          className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 bg-terminal-bg"
           onClick={(e) => e.stopPropagation()}
         >
           <span className="font-mono text-[13px] sm:text-[14px] text-terminal-accent shrink-0">{'>'}</span>
@@ -463,7 +463,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
       {/* Status bar */}
       <footer
-        className="flex items-center justify-between gap-2 px-3 sm:px-4 shrink-0 py-1 min-h-[28px] sm:min-h-[24px] sm:h-6"
+        className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2 px-3 sm:px-4 shrink-0 py-1.5 sm:py-1 min-h-[28px] sm:min-h-[24px]"
         style={{
           background: 'var(--terminal-surface)',
           borderTop: '1px solid var(--terminal-border)',
@@ -473,11 +473,12 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         <span className="font-mono text-[10px] sm:text-[11px] text-terminal-dim truncate min-w-0">
           {isStreaming ? 'streaming — esc to interrupt' : 'ready'}
         </span>
-        {statusHint && (
-          <span className="font-mono text-[10px] sm:text-[11px] text-terminal-dim text-right shrink-0 max-[420px]:max-w-[50%] leading-tight">
-            type /help for commands
-          </span>
-        )}
+        <div className="font-mono text-[9px] sm:text-[10px] text-terminal-dim text-left sm:text-right leading-snug sm:truncate sm:min-w-0 sm:max-w-[70%]">
+          {statusHint && <span className="opacity-90">type /help for commands · </span>}
+          <span className="opacity-75">/model gpt-oss-20b</span>
+          <span className="opacity-50 mx-1">·</span>
+          <span className="opacity-75">/inference groq-lpu</span>
+        </div>
       </footer>
     </div>
   )
@@ -500,7 +501,7 @@ function ThinkingIndicator() {
 
 function StreamingText({ text, done }: { text: string; done?: boolean }) {
   return (
-    <div className="font-mono text-[13px] sm:text-[14px] text-terminal-fg leading-relaxed whitespace-pre-wrap break-words">
+    <div className="font-mono text-[13px] sm:text-[14px] text-terminal-fg leading-snug whitespace-pre-wrap break-words">
       {text}
       {!done && (
         <span

@@ -44,7 +44,7 @@ function RenderSegment({
       return (
         <button
           onClick={() => onCommandClick?.(seg.command)}
-          className="text-terminal-accent underline hover:text-terminal-link transition-colors cursor-pointer bg-transparent border-none p-0 font-mono text-[13px] sm:text-[14px] leading-relaxed"
+          className="text-terminal-accent underline hover:text-terminal-link transition-colors cursor-pointer bg-transparent border-none p-0 font-mono text-[13px] sm:text-[14px] leading-snug"
         >
           {seg.text}
         </button>
@@ -52,7 +52,7 @@ function RenderSegment({
     case 'tag':
       return <span className="text-terminal-tag opacity-90">{seg.text}</span>
     case 'blank':
-      return <span className="block h-[1.2em]" />
+      return <span className="block h-[0.65em]" />
     case 'divider':
       return (
         <span className="block text-terminal-dim">
@@ -83,20 +83,20 @@ function RenderSegment({
 
 export default function OutputRenderer({ segments, onCommandClick }: OutputRendererProps) {
   return (
-    <div className="font-mono text-[13px] sm:text-[14px] leading-relaxed">
+    <div className="font-mono text-[13px] sm:text-[14px] leading-snug">
       {segments.map((seg, i) => {
         if (seg.type === 'blank') {
-          return <div key={i} className="h-[1.4em]" />
+          return <div key={i} className="h-[0.75em]" />
         }
         if (seg.type === 'divider') {
           return (
-            <div key={i} className="text-terminal-dim my-1">
+            <div key={i} className="text-terminal-dim my-0.5">
               {'—'.repeat(40)}
             </div>
           )
         }
         return (
-          <div key={i} className="min-h-[1.4em]">
+          <div key={i} className="min-h-[1.2em] py-px">
             <RenderSegment seg={seg} onCommandClick={onCommandClick} />
           </div>
         )

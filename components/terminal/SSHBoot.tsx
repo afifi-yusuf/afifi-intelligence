@@ -204,6 +204,14 @@ function BlockWord({
   )
 }
 
+/** Typing / line pacing — slightly slow for readability */
+const SSH_CHAR_MS = 32
+const SSH_BEFORE_TYPE_MS = 220
+const SSH_AFTER_CMD_MS = 480
+const SSH_LINE_STAGGER_MS = 580
+const SSH_FIRST_LINE_DELAY_MS = 400
+const SSH_FINAL_PAUSE_MS = 1100
+
 /** Plays after Enter — fake SSH session, then handoff to main terminal */
 const SSH_SCRIPT: { className: string; text: string }[] = [
   { className: 'text-terminal-fg', text: '$ ssh yusuf@afifi.dev' },
@@ -214,6 +222,10 @@ const SSH_SCRIPT: { className: string; text: string }[] = [
   },
   { className: 'text-terminal-dim', text: 'Authenticated to afifi.dev.' },
   { className: 'text-terminal-green', text: 'Welcome to Afifi Intelligence — session opened.' },
+  {
+    className: 'text-terminal-dim',
+    text: 'Inference: groq-lpu · model gpt-oss-20b — /ask & free-text.',
+  },
 ]
 
 interface Props {
@@ -278,26 +290,28 @@ export default function SSHBoot({ onComplete }: Props) {
       i += 1
       setSshPartial(fullCmd.slice(0, i))
       if (i < fullCmd.length) {
-        const id = setTimeout(typeNext, 18)
+        const id = setTimeout(typeNext, SSH_CHAR_MS)
         sshTimersRef.current.push(id)
       } else {
         pushSshTimer(() => {
           setSshLines([fullCmd])
           setSshPartial('')
-          const stagger = 400
           for (let j = 1; j < SSH_SCRIPT.length; j++) {
             const lineText = SSH_SCRIPT[j].text
             pushSshTimer(() => {
               setSshLines(prev => [...prev, lineText])
-            }, 280 + (j - 1) * stagger)
+            }, SSH_FIRST_LINE_DELAY_MS + (j - 1) * SSH_LINE_STAGGER_MS)
           }
-          const pauseAfter = 280 + (SSH_SCRIPT.length - 1) * stagger + 720
+          const pauseAfter =
+            SSH_FIRST_LINE_DELAY_MS +
+            (SSH_SCRIPT.length - 1) * SSH_LINE_STAGGER_MS +
+            SSH_FINAL_PAUSE_MS
           pushSshTimer(runExit, pauseAfter)
-        }, 300)
+        }, SSH_AFTER_CMD_MS)
       }
     }
 
-    pushSshTimer(typeNext, 140)
+    pushSshTimer(typeNext, SSH_BEFORE_TYPE_MS)
   }, [clearSshTimers, pushSshTimer, runExit])
 
   const skipSsh = useCallback(() => {
