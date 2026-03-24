@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: 'Yusuf Afifi — Software Engineer & AI Builder',
   description: 'Personal terminal. Type a command or ask me anything.',
   generator: 'v0.app',
+  icons: {
+    icon: [{ url: '/yusuf-chibi-icon.jpg', type: 'image/jpeg', sizes: '512x512' }],
+    apple: '/apple-touch-icon.jpg',
+  },
   openGraph: {
     title: 'Yusuf Afifi — Software Engineer & AI Builder',
     description: 'Personal terminal. Type a command or ask me anything.',
