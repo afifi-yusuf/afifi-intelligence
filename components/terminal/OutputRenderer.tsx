@@ -35,7 +35,7 @@ function RenderSegment({
           href={seg.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-terminal-link underline hover:text-terminal-accent transition-colors cursor-pointer"
+          className="text-terminal-link underline hover:text-terminal-green transition-colors cursor-pointer"
         >
           {seg.text}
         </a>
@@ -44,13 +44,13 @@ function RenderSegment({
       return (
         <button
           onClick={() => onCommandClick?.(seg.command)}
-          className="text-terminal-accent underline hover:text-terminal-link transition-colors cursor-pointer bg-transparent border-none p-0 font-mono text-[14px] leading-relaxed"
+          className="text-terminal-accent underline hover:text-terminal-link transition-colors cursor-pointer bg-transparent border-none p-0 font-mono text-[13px] sm:text-[14px] leading-relaxed"
         >
           {seg.text}
         </button>
       )
     case 'tag':
-      return <span className="text-terminal-tag">{seg.text}</span>
+      return <span className="text-terminal-tag opacity-90">{seg.text}</span>
     case 'blank':
       return <span className="block h-[1.2em]" />
     case 'divider':
@@ -68,9 +68,11 @@ function RenderSegment({
       )
     case 'line':
       return (
-        <span className="flex flex-wrap">
+        <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           {seg.segments.map((s, i) => (
-            <RenderSegment key={i} seg={s} onCommandClick={onCommandClick} />
+            <span key={i} className="whitespace-pre-wrap break-words min-w-0">
+              <RenderSegment seg={s} onCommandClick={onCommandClick} />
+            </span>
           ))}
         </span>
       )
@@ -81,7 +83,7 @@ function RenderSegment({
 
 export default function OutputRenderer({ segments, onCommandClick }: OutputRendererProps) {
   return (
-    <div className="font-mono text-[14px] leading-relaxed">
+    <div className="font-mono text-[13px] sm:text-[14px] leading-relaxed">
       {segments.map((seg, i) => {
         if (seg.type === 'blank') {
           return <div key={i} className="h-[1.4em]" />

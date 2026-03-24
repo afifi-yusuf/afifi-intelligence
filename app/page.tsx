@@ -30,8 +30,7 @@ function PageInner() {
     <>
       {!booted && <SSHBoot onComplete={handleBootComplete} />}
       <div
-        className={`transition-opacity duration-500 ${booted ? 'opacity-100' : 'opacity-0'}`}
-        style={{ height: '100dvh' }}
+        className={`min-h-dvh h-dvh transition-opacity duration-500 ${booted ? 'opacity-100' : 'opacity-0'}`}
       >
         <Terminal
           key={terminalKey}

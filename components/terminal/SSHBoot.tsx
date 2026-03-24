@@ -92,18 +92,21 @@ const BLOCK_FONT: Record<string, number[][]> = {
 const LINE1 = ['A','F','I','F','I']
 const LINE2 = ['I','N','T','E','L','L','I','G','E','N','C','E']
 
-const CELL = 10   // px per block cell
-const GAP = 2     // px gap between cells
-const LETTER_GAP = 10 // px gap between letters
+const CELL_DEFAULT = 10
+const GAP = 2
+const LETTER_GAP_DEFAULT = 10
 
-function BlockLetter({ char, visible }: { char: string; visible: boolean }) {
+const GREEN = '#7ee787'
+const GREEN_DIM = 'rgba(126, 231, 135, 0.14)'
+
+function BlockLetter({ char, visible, cell }: { char: string; visible: boolean; cell: number }) {
   const grid = BLOCK_FONT[char]
   if (!grid) return null
 
   const rows = grid.length
   const cols = grid[0].length
-  const width = cols * (CELL + GAP) - GAP
-  const height = rows * (CELL + GAP) - GAP
+  const width = cols * (cell + GAP) - GAP
+  const height = rows * (cell + GAP) - GAP
 
   return (
     <svg
@@ -118,12 +121,12 @@ function BlockLetter({ char, visible }: { char: string; visible: boolean }) {
           cell ? (
             <rect
               key={`${ri}-${ci}`}
-              x={ci * (CELL + GAP)}
-              y={ri * (CELL + GAP)}
-              width={CELL}
-              height={CELL}
+              x={ci * (cell + GAP)}
+              y={ri * (cell + GAP)}
+              width={cell}
+              height={cell}
               rx={1}
-              fill="#cf9c6e"
+              fill={GREEN}
             />
           ) : null
         )
@@ -132,11 +135,21 @@ function BlockLetter({ char, visible }: { char: string; visible: boolean }) {
   )
 }
 
-function BlockWord({ chars, visibleCount }: { chars: string[]; visibleCount: number }) {
+function BlockWord({
+  chars,
+  visibleCount,
+  cell,
+  letterGap,
+}: {
+  chars: string[]
+  visibleCount: number
+  cell: number
+  letterGap: number
+}) {
   return (
-    <div className="flex" style={{ gap: `${LETTER_GAP}px` }}>
+    <div className="flex flex-wrap max-w-full" style={{ gap: `${letterGap}px` }}>
       {chars.map((ch, i) => (
-        <BlockLetter key={`${ch}-${i}`} char={ch} visible={i < visibleCount} />
+        <BlockLetter key={`${ch}-${i}`} char={ch} visible={i < visibleCount} cell={cell} />
       ))}
     </div>
   )
@@ -147,6 +160,18 @@ interface Props {
 }
 
 export default function SSHBoot({ onComplete }: Props) {
+  const [compact, setCompact] = useState(false)
+  useEffect(() => {
+    const q = window.matchMedia('(max-width: 640px)')
+    const sync = () => setCompact(q.matches)
+    sync()
+    q.addEventListener('change', sync)
+    return () => q.removeEventListener('change', sync)
+  }, [])
+
+  const cell = compact ? 6 : CELL_DEFAULT
+  const letterGap = compact ? 5 : LETTER_GAP_DEFAULT
+
   const [showBanner, setShowBanner] = useState(false)
   const [line1Visible, setLine1Visible] = useState(0)
   const [line2Visible, setLine2Visible] = useState(0)
@@ -196,9 +221,9 @@ export default function SSHBoot({ onComplete }: Props) {
 
   return (
     <div
-      className="fixed inset-0 flex flex-col"
+      className="fixed inset-0 flex flex-col pt-[env(safe-area-inset-top)]"
       style={{
-        background: '#1a1a1a',
+        background: '#0a0a0a',
         zIndex: 50,
         opacity: fading ? 0 : 1,
         transition: 'opacity 0.6s ease',
@@ -225,36 +250,39 @@ export default function SSHBoot({ onComplete }: Props) {
       </div>
 
       {/* Terminal body */}
-      <div className="flex flex-col flex-1 px-8 py-6" style={{ color: '#e6e6e6' }}>
+      <div
+        className="flex flex-col flex-1 px-4 py-4 sm:px-8 sm:py-6 min-h-0 overflow-x-auto"
+        style={{ color: '#e6e6e6' }}
+      >
         {/* Welcome banner */}
         <div
-          className="font-mono text-[13px] mb-8 px-3 py-2 border inline-flex items-center gap-2"
+          className="font-mono text-[12px] sm:text-[13px] mb-4 sm:mb-8 px-3 py-2 border inline-flex flex-wrap items-center gap-x-2 gap-y-1 max-w-full"
           style={{
-            borderColor: '#cf9c6e',
-            color: '#cf9c6e',
-            background: 'rgba(207,156,110,0.08)',
+            borderColor: GREEN,
+            color: GREEN,
+            background: GREEN_DIM,
             opacity: showBanner ? 1 : 0,
             transition: 'opacity 0.5s ease',
             alignSelf: 'flex-start',
           }}
         >
-          <span style={{ color: '#cf9c6e' }}>*</span>
+          <span style={{ color: GREEN }}>*</span>
           <span>Welcome to the </span>
           <strong>Afifi Intelligence</strong>
           <span> research preview!</span>
         </div>
 
         {/* Big block letters */}
-        <div className="flex flex-col" style={{ gap: '20px', flex: 1 }}>
-          <BlockWord chars={LINE1} visibleCount={line1Visible} />
-          <BlockWord chars={LINE2} visibleCount={line2Visible} />
+        <div className="flex flex-col min-h-0" style={{ gap: compact ? '12px' : '20px', flex: 1 }}>
+          <BlockWord chars={LINE1} visibleCount={line1Visible} cell={cell} letterGap={letterGap} />
+          <BlockWord chars={LINE2} visibleCount={line2Visible} cell={cell} letterGap={letterGap} />
         </div>
 
         {/* Login line */}
         <div
-          className="font-mono text-[13px] mt-auto"
+          className="font-mono text-[12px] sm:text-[13px] mt-auto pb-[env(safe-area-inset-bottom)]"
           style={{
-            color: '#7ee787',
+            color: GREEN,
             opacity: showLogin ? 1 : 0,
             transition: 'opacity 0.4s ease',
           }}
@@ -268,7 +296,7 @@ export default function SSHBoot({ onComplete }: Props) {
               <span
                 className="inline-block w-2 h-[1em] align-middle ml-1"
                 style={{
-                  background: '#7ee787',
+                  background: GREEN,
                   animation: 'cursor-blink 1s step-end infinite',
                 }}
               />

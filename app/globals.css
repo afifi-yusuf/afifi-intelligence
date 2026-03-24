@@ -5,18 +5,19 @@
 
 /* Terminal design tokens */
 :root {
-  --terminal-bg: #0d1117;
-  --terminal-surface: #161b22;
+  --terminal-bg: #0a0a0a;
+  --terminal-surface: #141414;
   --terminal-fg: #e6e6e6;
   --terminal-dim: #7d8590;
-  --terminal-accent: #7aa2f7;
+  /* Prompt, caret, interactive emphasis — green, not blue/orange */
+  --terminal-accent: #7ee787;
   --terminal-green: #7ee787;
-  --terminal-yellow: #d29922;
+  --terminal-yellow: #a3d977;
   --terminal-red: #f85149;
-  --terminal-link: #58a6ff;
-  --terminal-tag: #a371f7;
+  --terminal-link: #9ae6b4;
+  --terminal-tag: #5dbd73;
   --terminal-border: rgba(255, 255, 255, 0.06);
-  --terminal-selection: rgba(122, 162, 247, 0.25);
+  --terminal-selection: rgba(126, 231, 135, 0.22);
 }
 
 :root {

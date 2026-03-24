@@ -320,22 +320,22 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
   return (
     <div
-      className="flex flex-col h-screen bg-terminal-bg overflow-hidden terminal-selection"
+      className="flex flex-col h-dvh min-h-0 bg-terminal-bg overflow-hidden terminal-selection pt-[env(safe-area-inset-top)]"
       onClick={focusInput}
     >
       {/* Header */}
       <header
-        className="flex items-center justify-between px-4 shrink-0 border-b"
+        className="flex items-center justify-between gap-2 px-3 sm:px-4 shrink-0 border-b min-w-0"
         style={{
           height: '36px',
           background: 'var(--terminal-surface)',
           borderColor: 'var(--terminal-border)',
         }}
       >
-        <span className="font-mono text-[12px] text-terminal-dim tracking-wide">
+        <span className="font-mono text-[11px] sm:text-[12px] text-terminal-dim tracking-wide truncate min-w-0">
           yusuf afifi
         </span>
-        <span className="font-mono text-[12px] text-terminal-dim">
+        <span className="font-mono text-[10px] sm:text-[12px] text-terminal-dim shrink-0 max-[380px]:hidden">
           afifi-intelligence v1.0.0
         </span>
       </header>
@@ -343,23 +343,23 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
       {/* Terminal body */}
       <main
         ref={outputRef}
-        className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth terminal-scrollbar"
+        className="flex-1 min-h-0 overflow-y-auto px-3 py-3 sm:px-6 sm:py-4 scroll-smooth terminal-scrollbar"
         aria-live="polite"
         aria-label="Terminal output"
       >
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
           {blocks.map(block => {
             if (block.kind === 'user') {
               return (
                 <div key={block.id} className="flex items-start gap-2">
-                  <span className="text-terminal-accent font-mono text-[14px] shrink-0 mt-0.5">{'>'}</span>
-                  <span className="font-mono text-[14px] text-terminal-fg">{block.text}</span>
+                  <span className="text-terminal-accent font-mono text-[13px] sm:text-[14px] shrink-0 mt-0.5">{'>'}</span>
+                  <span className="font-mono text-[13px] sm:text-[14px] text-terminal-fg break-words min-w-0">{block.text}</span>
                 </div>
               )
             }
             if (block.kind === 'output') {
               return (
-                <div key={block.id} className="pl-4 border-l-2 border-transparent">
+                <div key={block.id} className="pl-2 sm:pl-4 border-l-2 border-transparent">
                   <OutputRenderer
                     segments={block.segments}
                     onCommandClick={handleCommandClick}
@@ -369,22 +369,22 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
             }
             if (block.kind === 'thinking') {
               return (
-                <div key={block.id} className="pl-4">
+                <div key={block.id} className="pl-2 sm:pl-4">
                   <ThinkingIndicator />
                 </div>
               )
             }
             if (block.kind === 'streaming') {
               return (
-                <div key={block.id} className="pl-4">
+                <div key={block.id} className="pl-2 sm:pl-4">
                   <StreamingText text={block.text} done={block.done} />
                 </div>
               )
             }
             if (block.kind === 'system') {
               return (
-                <div key={block.id} className="pl-4">
-                  <span className="font-mono text-[13px] text-terminal-dim italic">{block.text}</span>
+                <div key={block.id} className="pl-2 sm:pl-4">
+                  <span className="font-mono text-[12px] sm:text-[13px] text-terminal-dim italic">{block.text}</span>
                 </div>
               )
             }
@@ -397,7 +397,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
       {/* Mobile command chips */}
       <div
-        className="md:hidden flex gap-2 overflow-x-auto px-4 py-2 shrink-0 border-t"
+        className="md:hidden flex gap-2 overflow-x-auto px-3 py-2 shrink-0 border-t"
         style={{ borderColor: 'var(--terminal-border)', background: 'var(--terminal-bg)' }}
       >
         {MOBILE_CHIPS.map(chip => (
@@ -407,7 +407,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
               e.stopPropagation()
               executeInput(chip)
             }}
-            className="shrink-0 px-3 py-1.5 rounded font-mono text-[12px] text-terminal-accent border transition-colors hover:bg-terminal-surface min-h-[36px]"
+            className="shrink-0 px-2.5 py-1.5 rounded font-mono text-[11px] text-terminal-accent border transition-colors hover:bg-terminal-surface min-h-[36px] touch-manipulation"
             style={{ borderColor: 'var(--terminal-border)' }}
           >
             {chip}
@@ -423,7 +423,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         {/* Autocomplete suggestions */}
         {suggestions.length > 1 && (
           <div
-            className="px-6 py-2 flex gap-3 flex-wrap border-b"
+            className="px-3 sm:px-6 py-2 flex gap-2 sm:gap-3 flex-wrap border-b"
             style={{ borderColor: 'var(--terminal-border)', background: 'var(--terminal-surface)' }}
           >
             {suggestions.map((s, i) => (
@@ -446,10 +446,10 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         )}
 
         <div
-          className="flex items-center gap-3 px-6 py-3 bg-terminal-bg"
+          className="flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-2.5 sm:py-3 bg-terminal-bg"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="font-mono text-[14px] text-terminal-accent shrink-0">{'>'}</span>
+          <span className="font-mono text-[13px] sm:text-[14px] text-terminal-accent shrink-0">{'>'}</span>
           <input
             ref={inputRef}
             type="text"
@@ -464,7 +464,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
             spellCheck={false}
             aria-label="Terminal input"
             placeholder={isStreaming ? '' : undefined}
-            className="flex-1 bg-transparent border-none outline-none font-mono text-[14px] text-terminal-fg caret-terminal-accent placeholder:text-terminal-dim"
+            className="flex-1 min-w-0 bg-transparent border-none outline-none font-mono text-[13px] sm:text-[14px] text-terminal-fg caret-terminal-accent placeholder:text-terminal-dim"
             style={{ caretColor: 'var(--terminal-accent)' }}
           />
           {isStreaming && (
@@ -477,18 +477,18 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
       {/* Status bar */}
       <footer
-        className="flex items-center justify-between px-4 shrink-0"
+        className="flex items-center justify-between gap-2 px-3 sm:px-4 shrink-0 py-1 min-h-[28px] sm:min-h-[24px] sm:h-6"
         style={{
-          height: '24px',
           background: 'var(--terminal-surface)',
           borderTop: '1px solid var(--terminal-border)',
+          paddingBottom: 'max(4px, env(safe-area-inset-bottom))',
         }}
       >
-        <span className="font-mono text-[11px] text-terminal-dim">
+        <span className="font-mono text-[10px] sm:text-[11px] text-terminal-dim truncate min-w-0">
           {isStreaming ? 'streaming — esc to interrupt' : 'ready'}
         </span>
         {statusHint && (
-          <span className="font-mono text-[11px] text-terminal-dim">
+          <span className="font-mono text-[10px] sm:text-[11px] text-terminal-dim text-right shrink-0 max-[420px]:max-w-[50%] leading-tight">
             type /help for commands
           </span>
         )}
@@ -514,7 +514,7 @@ function ThinkingIndicator() {
 
 function StreamingText({ text, done }: { text: string; done?: boolean }) {
   return (
-    <div className="font-mono text-[14px] text-terminal-fg leading-relaxed whitespace-pre-wrap">
+    <div className="font-mono text-[13px] sm:text-[14px] text-terminal-fg leading-relaxed whitespace-pre-wrap break-words">
       {text}
       {!done && (
         <span
