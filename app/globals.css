@@ -93,7 +93,9 @@
 
 @theme inline {
   --font-sans: 'Geist', 'Geist Fallback';
-  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', 'Courier New', monospace;
+  /* Native terminal stack — same class of fonts Claude Code picks up from the shell */
+  --font-mono: ui-monospace, 'SF Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Cascadia Mono',
+    'Segoe UI Mono', 'Roboto Mono', 'Liberation Mono', 'Courier New', monospace;
   --color-terminal-bg: var(--terminal-bg);
   --color-terminal-surface: var(--terminal-surface);
   --color-terminal-fg: var(--terminal-fg);
@@ -149,6 +151,15 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Sharper, terminal-native rendering (less “web font” smoothing) */
+.terminal-text {
+  font-synthesis: none;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  letter-spacing: -0.012em;
 }
 
 /* Terminal-specific globals */

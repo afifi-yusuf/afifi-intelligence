@@ -1,112 +1,140 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import TerminalHeader from './TerminalHeader'
 
 // Block-pixel font: each letter is a 5-wide x 7-tall grid
 // 1 = filled, 0 = empty
 const BLOCK_FONT: Record<string, number[][]> = {
   A: [
-    [0,1,1,1,0],
-    [1,0,0,0,1],
-    [1,0,0,0,1],
-    [1,1,1,1,1],
-    [1,0,0,0,1],
-    [1,0,0,0,1],
-    [1,0,0,0,1],
+    [0, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
   ],
   F: [
-    [1,1,1,1,1],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,1,1,1,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
+    [1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
   ],
   I: [
-    [1,1,1,1,1],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [1,1,1,1,1],
+    [1, 1, 1, 1, 1],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [1, 1, 1, 1, 1],
   ],
   N: [
-    [1,0,0,0,1],
-    [1,1,0,0,1],
-    [1,0,1,0,1],
-    [1,0,0,1,1],
-    [1,0,0,0,1],
-    [1,0,0,0,1],
-    [1,0,0,0,1],
+    [1, 0, 0, 0, 1],
+    [1, 1, 0, 0, 1],
+    [1, 0, 1, 0, 1],
+    [1, 0, 0, 1, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
   ],
   T: [
-    [1,1,1,1,1],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
+    [1, 1, 1, 1, 1],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
   ],
   E: [
-    [1,1,1,1,1],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,1,1,1,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,1,1,1,1],
+    [1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1],
   ],
   L: [
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,1,1,1,1],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1],
   ],
   G: [
-    [0,1,1,1,0],
-    [1,0,0,0,1],
-    [1,0,0,0,0],
-    [1,0,1,1,1],
-    [1,0,0,0,1],
-    [1,0,0,0,1],
-    [0,1,1,1,0],
+    [0, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0],
+    [1, 0, 1, 1, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [0, 1, 1, 1, 0],
   ],
   C: [
-    [0,1,1,1,0],
-    [1,0,0,0,1],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,0,0,0,0],
-    [1,0,0,0,1],
-    [0,1,1,1,0],
+    [0, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 1],
+    [0, 1, 1, 1, 0],
   ],
 }
 
-// "AFIFI" on line 1, "INTELLIGENCE" on line 2
-const LINE1 = ['A','F','I','F','I']
-const LINE2 = ['I','N','T','E','L','L','I','G','E','N','C','E']
+const LINE1 = ['A', 'F', 'I', 'F', 'I']
+const LINE2 = ['I', 'N', 'T', 'E', 'L', 'L', 'I', 'G', 'E', 'N', 'C', 'E']
 
 const CELL_DEFAULT = 10
 const GAP = 2
-const LETTER_GAP_DEFAULT = 10
+const LETTER_GAP_DEFAULT = 8
+
+/** Claude Code–style stepped depth: parallel offset “echo” layers down-right */
+const DEPTH_LAYERS = 4
+const DEPTH_STEP = 2.25
 
 const GREEN = '#7ee787'
-const GREEN_DIM = 'rgba(126, 231, 135, 0.14)'
+const GREEN_SOFT = 'rgba(126, 231, 135, 0.22)'
+const GREEN_LINE = 'rgba(126, 231, 135, 0.45)'
 
-function BlockLetter({ char, visible, cell }: { char: string; visible: boolean; cell: number }) {
+function BlockLetter({
+  char,
+  visible,
+  cellSize,
+}: {
+  char: string
+  visible: boolean
+  cellSize: number
+}) {
   const grid = BLOCK_FONT[char]
   if (!grid) return null
 
   const rows = grid.length
   const cols = grid[0].length
-  const width = cols * (cell + GAP) - GAP
-  const height = rows * (cell + GAP) - GAP
+  const depthPad = DEPTH_LAYERS * DEPTH_STEP
+  const innerW = cols * (cellSize + GAP) - GAP
+  const innerH = rows * (cellSize + GAP) - GAP
+  const width = innerW + depthPad
+  const height = innerH + depthPad
+
+  const cells: { x: number; y: number }[] = []
+  for (let ri = 0; ri < rows; ri++) {
+    for (let ci = 0; ci < cols; ci++) {
+      if (grid[ri][ci]) {
+        cells.push({
+          x: ci * (cellSize + GAP),
+          y: ri * (cellSize + GAP),
+        })
+      }
+    }
+  }
 
   return (
     <svg
@@ -114,23 +142,44 @@ function BlockLetter({ char, visible, cell }: { char: string; visible: boolean; 
       height={height}
       viewBox={`0 0 ${width} ${height}`}
       aria-hidden="true"
+      className="shrink-0 overflow-visible"
       style={{ transition: 'opacity 0.4s ease', opacity: visible ? 1 : 0 }}
     >
-      {grid.map((row, ri) =>
-        row.map((cell, ci) =>
-          cell ? (
-            <rect
-              key={`${ri}-${ci}`}
-              x={ci * (cell + GAP)}
-              y={ri * (cell + GAP)}
-              width={cell}
-              height={cell}
-              rx={1}
-              fill={GREEN}
-            />
-          ) : null
-        )
-      )}
+      <title>{char}</title>
+      {cells.map(({ x, y }, idx) => (
+        <g key={idx}>
+          {Array.from({ length: DEPTH_LAYERS }, (_, layer) => {
+            const d = DEPTH_LAYERS - layer
+            const ox = d * DEPTH_STEP
+            const oy = d * DEPTH_STEP
+            const alpha = 0.05 + layer * 0.045
+            return (
+              <rect
+                key={`depth-${layer}`}
+                x={x + ox}
+                y={y + oy}
+                width={cellSize}
+                height={cellSize}
+                rx={0.5}
+                fill={`rgba(126, 231, 135, ${alpha})`}
+                stroke={GREEN_LINE}
+                strokeWidth={0.35}
+                strokeOpacity={0.35}
+              />
+            )
+          })}
+          <rect
+            x={x}
+            y={y}
+            width={cellSize}
+            height={cellSize}
+            rx={0.5}
+            fill={GREEN}
+            stroke={GREEN_SOFT}
+            strokeWidth={0.5}
+          />
+        </g>
+      ))}
     </svg>
   )
 }
@@ -138,22 +187,34 @@ function BlockLetter({ char, visible, cell }: { char: string; visible: boolean; 
 function BlockWord({
   chars,
   visibleCount,
-  cell,
+  cellSize,
   letterGap,
 }: {
   chars: string[]
   visibleCount: number
-  cell: number
+  cellSize: number
   letterGap: number
 }) {
   return (
-    <div className="flex flex-wrap max-w-full" style={{ gap: `${letterGap}px` }}>
+    <div className="flex flex-wrap items-end max-w-full" style={{ gap: `${letterGap}px` }}>
       {chars.map((ch, i) => (
-        <BlockLetter key={`${ch}-${i}`} char={ch} visible={i < visibleCount} cell={cell} />
+        <BlockLetter key={`${ch}-${i}`} char={ch} visible={i < visibleCount} cellSize={cellSize} />
       ))}
     </div>
   )
 }
+
+/** Plays after Enter — fake SSH session, then handoff to main terminal */
+const SSH_SCRIPT: { className: string; text: string }[] = [
+  { className: 'text-terminal-fg', text: '$ ssh yusuf@afifi.dev' },
+  { className: 'text-terminal-dim', text: 'Connecting to afifi.dev port 22 ...' },
+  {
+    className: 'text-terminal-dim',
+    text: 'Remote protocol version 2.0, remote software version OpenSSH_9.2',
+  },
+  { className: 'text-terminal-dim', text: 'Authenticated to afifi.dev.' },
+  { className: 'text-terminal-green', text: 'Welcome to Afifi Intelligence — session opened.' },
+]
 
 interface Props {
   onComplete: () => void
@@ -169,8 +230,8 @@ export default function SSHBoot({ onComplete }: Props) {
     return () => q.removeEventListener('change', sync)
   }, [])
 
-  const cell = compact ? 6 : CELL_DEFAULT
-  const letterGap = compact ? 5 : LETTER_GAP_DEFAULT
+  const cellSize = compact ? 5.5 : CELL_DEFAULT
+  const letterGap = compact ? 4 : LETTER_GAP_DEFAULT
 
   const [showBanner, setShowBanner] = useState(false)
   const [line1Visible, setLine1Visible] = useState(0)
@@ -179,30 +240,97 @@ export default function SSHBoot({ onComplete }: Props) {
   const [waitingForEnter, setWaitingForEnter] = useState(false)
   const [fading, setFading] = useState(false)
 
-  const proceed = useCallback(() => {
-    if (!waitingForEnter) return
+  const [phase, setPhase] = useState<'splash' | 'ssh'>('splash')
+  const [sshLines, setSshLines] = useState<string[]>([])
+  const [sshPartial, setSshPartial] = useState('')
+
+  const sshTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const exitStartedRef = useRef(false)
+
+  const clearSshTimers = useCallback(() => {
+    sshTimersRef.current.forEach(clearTimeout)
+    sshTimersRef.current = []
+  }, [])
+
+  const runExit = useCallback(() => {
+    if (exitStartedRef.current) return
+    exitStartedRef.current = true
+    clearSshTimers()
     setFading(true)
-    setTimeout(onComplete, 600)
-  }, [waitingForEnter, onComplete])
+    const id = setTimeout(() => onComplete(), 600)
+    sshTimersRef.current.push(id)
+  }, [clearSshTimers, onComplete])
+
+  const pushSshTimer = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(fn, ms)
+    sshTimersRef.current.push(id)
+  }, [])
+
+  const startSshSequence = useCallback(() => {
+    clearSshTimers()
+    setPhase('ssh')
+    setSshLines([])
+    setSshPartial('')
+
+    const fullCmd = SSH_SCRIPT[0].text
+    let i = 0
+    const typeNext = () => {
+      i += 1
+      setSshPartial(fullCmd.slice(0, i))
+      if (i < fullCmd.length) {
+        const id = setTimeout(typeNext, 18)
+        sshTimersRef.current.push(id)
+      } else {
+        pushSshTimer(() => {
+          setSshLines([fullCmd])
+          setSshPartial('')
+          const stagger = 400
+          for (let j = 1; j < SSH_SCRIPT.length; j++) {
+            const lineText = SSH_SCRIPT[j].text
+            pushSshTimer(() => {
+              setSshLines(prev => [...prev, lineText])
+            }, 280 + (j - 1) * stagger)
+          }
+          const pauseAfter = 280 + (SSH_SCRIPT.length - 1) * stagger + 720
+          pushSshTimer(runExit, pauseAfter)
+        }, 300)
+      }
+    }
+
+    pushSshTimer(typeNext, 140)
+  }, [clearSshTimers, pushSshTimer, runExit])
+
+  const skipSsh = useCallback(() => {
+    if (phase !== 'ssh') return
+    clearSshTimers()
+    setSshLines(SSH_SCRIPT.map(l => l.text))
+    setSshPartial('')
+    pushSshTimer(runExit, 220)
+  }, [phase, clearSshTimers, pushSshTimer, runExit])
+
+  const finishSplash = useCallback(() => {
+    if (phase !== 'splash' || !waitingForEnter) return
+    startSshSequence()
+  }, [phase, waitingForEnter, startSshSequence])
+
+  useEffect(() => {
+    return () => clearSshTimers()
+  }, [clearSshTimers])
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
 
-    // Banner appears
     timers.push(setTimeout(() => setShowBanner(true), 200))
 
-    // Animate AFIFI letter-by-letter
     LINE1.forEach((_, i) => {
       timers.push(setTimeout(() => setLine1Visible(i + 1), 500 + i * 80))
     })
 
-    // Animate INTELLIGENCE letter-by-letter after AFIFI
     const line2Start = 500 + LINE1.length * 80 + 100
     LINE2.forEach((_, i) => {
       timers.push(setTimeout(() => setLine2Visible(i + 1), line2Start + i * 55))
     })
 
-    // Login line appears after all letters
     const loginStart = line2Start + LINE2.length * 55 + 250
     timers.push(setTimeout(() => setShowLogin(true), loginStart))
     timers.push(setTimeout(() => setWaitingForEnter(true), loginStart + 200))
@@ -210,101 +338,115 @@ export default function SSHBoot({ onComplete }: Props) {
     return () => timers.forEach(clearTimeout)
   }, [])
 
-  // Keyboard: Enter or Space to continue
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') proceed()
+      if (e.key !== 'Enter' && e.key !== ' ') return
+      if (phase === 'splash') finishSplash()
+      else skipSsh()
     }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [proceed])
+  }, [phase, finishSplash, skipSsh])
+
+  const handleRootClick = useCallback(() => {
+    if (phase === 'splash') finishSplash()
+    else skipSsh()
+  }, [phase, finishSplash, skipSsh])
 
   return (
     <div
-      className="fixed inset-0 flex flex-col pt-[env(safe-area-inset-top)]"
+      className="terminal-text fixed inset-0 flex flex-col pt-[env(safe-area-inset-top)] bg-black"
       style={{
-        background: '#0a0a0a',
         zIndex: 50,
         opacity: fading ? 0 : 1,
         transition: 'opacity 0.6s ease',
       }}
-      onClick={proceed}
+      onClick={handleRootClick}
     >
-      {/* macOS window chrome */}
-      <div
-        className="flex items-center shrink-0 px-4"
-        style={{ height: '40px', background: '#2a2a2a', borderBottom: '1px solid #333' }}
-      >
-        {/* Traffic lights */}
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full" style={{ background: '#ff5f57' }} />
-          <div className="w-3 h-3 rounded-full" style={{ background: '#ffbd2e' }} />
-          <div className="w-3 h-3 rounded-full" style={{ background: '#28c840' }} />
-        </div>
-        <span
-          className="absolute left-1/2 -translate-x-1/2 font-mono text-[12px]"
-          style={{ color: '#6e6e6e' }}
-        >
-          afifi-intelligence — ssh yusuf@afifi.dev
-        </span>
-      </div>
+      <TerminalHeader />
 
-      {/* Terminal body */}
-      <div
-        className="flex flex-col flex-1 px-4 py-4 sm:px-8 sm:py-6 min-h-0 overflow-x-auto"
-        style={{ color: '#e6e6e6' }}
-      >
-        {/* Welcome banner */}
-        <div
-          className="font-mono text-[12px] sm:text-[13px] mb-4 sm:mb-8 px-3 py-2 border inline-flex flex-wrap items-center gap-x-2 gap-y-1 max-w-full"
-          style={{
-            borderColor: GREEN,
-            color: GREEN,
-            background: GREEN_DIM,
-            opacity: showBanner ? 1 : 0,
-            transition: 'opacity 0.5s ease',
-            alignSelf: 'flex-start',
-          }}
-        >
-          <span style={{ color: GREEN }}>*</span>
-          <span>Welcome to the </span>
-          <strong>Afifi Intelligence</strong>
-          <span> research preview!</span>
-        </div>
+      <div className="flex flex-col flex-1 px-3 py-5 sm:px-8 sm:py-8 min-h-0 overflow-x-auto text-terminal-fg justify-start">
+        {phase === 'splash' && (
+          <>
+            <p
+              className="font-mono text-[11px] sm:text-[12px] text-terminal-dim italic mb-6 sm:mb-10 leading-relaxed max-w-prose"
+              style={{
+                opacity: showBanner ? 1 : 0,
+                transition: 'opacity 0.5s ease',
+              }}
+            >
+              <span className="text-terminal-green not-italic">*</span> Afifi Intelligence — research preview
+            </p>
 
-        {/* Big block letters */}
-        <div className="flex flex-col min-h-0" style={{ gap: compact ? '12px' : '20px', flex: 1 }}>
-          <BlockWord chars={LINE1} visibleCount={line1Visible} cell={cell} letterGap={letterGap} />
-          <BlockWord chars={LINE2} visibleCount={line2Visible} cell={cell} letterGap={letterGap} />
-        </div>
-
-        {/* Login line */}
-        <div
-          className="font-mono text-[12px] sm:text-[13px] mt-auto pb-[env(safe-area-inset-bottom)]"
-          style={{
-            color: GREEN,
-            opacity: showLogin ? 1 : 0,
-            transition: 'opacity 0.4s ease',
-          }}
-        >
-          {waitingForEnter ? (
-            <>
-              <span>{'> '}</span>
-              <span>Login successful. Press </span>
-              <strong>Enter</strong>
-              <span> to continue</span>
-              <span
-                className="inline-block w-2 h-[1em] align-middle ml-1"
-                style={{
-                  background: GREEN,
-                  animation: 'cursor-blink 1s step-end infinite',
-                }}
+            <div
+              className="flex flex-col items-start select-none"
+              style={{ gap: compact ? '10px' : '16px' }}
+            >
+              <BlockWord
+                chars={LINE1}
+                visibleCount={line1Visible}
+                cellSize={cellSize}
+                letterGap={letterGap}
               />
-            </>
-          ) : (
-            <span>Authenticating...</span>
-          )}
-        </div>
+              <BlockWord
+                chars={LINE2}
+                visibleCount={line2Visible}
+                cellSize={cellSize}
+                letterGap={letterGap}
+              />
+            </div>
+
+            <div
+              className="font-mono text-[12px] sm:text-[13px] mt-auto pt-8 sm:pt-10 pb-[env(safe-area-inset-bottom)]"
+              style={{
+                color: GREEN,
+                opacity: showLogin ? 1 : 0,
+                transition: 'opacity 0.4s ease',
+              }}
+            >
+              {waitingForEnter ? (
+                <>
+                  <span>{'> '}</span>
+                  <span>Press </span>
+                  <strong>Enter</strong>
+                  <span> to connect</span>
+                  <span
+                    className="inline-block w-2 h-[1em] align-middle ml-1"
+                    style={{
+                      background: GREEN,
+                      animation: 'cursor-blink 1s step-end infinite',
+                    }}
+                  />
+                </>
+              ) : (
+                <span>Authenticating...</span>
+              )}
+            </div>
+          </>
+        )}
+
+        {phase === 'ssh' && (
+          <div className="font-mono text-[12px] sm:text-[13px] leading-relaxed space-y-2.5 pb-[env(safe-area-inset-bottom)] break-words">
+            {sshLines.map((text, idx) => (
+              <div key={`${idx}-${text.slice(0, 12)}`} className={SSH_SCRIPT[idx].className}>
+                {text}
+              </div>
+            ))}
+            {sshPartial ? (
+              <div className={SSH_SCRIPT[0].className}>
+                {sshPartial}
+                <span
+                  className="inline-block w-[6px] h-[1.1em] align-[-0.12em] ml-0.5"
+                  style={{
+                    background: GREEN,
+                    animation: 'cursor-blink 1s step-end infinite',
+                  }}
+                />
+              </div>
+            ) : null}
+            <p className="text-terminal-dim text-[11px] pt-4">Click or Enter to skip</p>
+          </div>
+        )}
       </div>
     </div>
   )

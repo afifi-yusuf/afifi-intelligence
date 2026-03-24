@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { runCommand, WELCOME_SEGMENTS, COMMAND_NAMES, OutputBlock, OutputSegment } from '@/lib/commands'
 import OutputRenderer from './OutputRenderer'
+import TerminalHeader from './TerminalHeader'
 
 const MAX_QUESTIONS = 20
 const MOBILE_CHIPS = ['/about', '/projects', '/skills', '/journey', '/contact', '/experience']
@@ -320,25 +321,10 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
   return (
     <div
-      className="flex flex-col h-dvh min-h-0 bg-terminal-bg overflow-hidden terminal-selection pt-[env(safe-area-inset-top)]"
+      className="terminal-text flex flex-col h-dvh min-h-0 bg-terminal-bg overflow-hidden terminal-selection pt-[env(safe-area-inset-top)]"
       onClick={focusInput}
     >
-      {/* Header */}
-      <header
-        className="flex items-center justify-between gap-2 px-3 sm:px-4 shrink-0 border-b min-w-0"
-        style={{
-          height: '36px',
-          background: 'var(--terminal-surface)',
-          borderColor: 'var(--terminal-border)',
-        }}
-      >
-        <span className="font-mono text-[11px] sm:text-[12px] text-terminal-dim tracking-wide truncate min-w-0">
-          yusuf afifi
-        </span>
-        <span className="font-mono text-[10px] sm:text-[12px] text-terminal-dim shrink-0 max-[380px]:hidden">
-          afifi-intelligence v1.0.0
-        </span>
-      </header>
+      <TerminalHeader />
 
       {/* Terminal body */}
       <main
