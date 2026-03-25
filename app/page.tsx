@@ -7,12 +7,10 @@ import Terminal from '@/components/terminal/Terminal'
 
 function PageInner() {
   const [booted, setBooted] = useState(false)
-  const [terminalKey, setTerminalKey] = useState(0)
   const searchParams = useSearchParams()
 
   const handleBootComplete = useCallback(() => {
     setBooted(true)
-    setTerminalKey(k => k + 1)
   }, [])
 
   // Respect prefers-reduced-motion — skip boot animation
@@ -29,15 +27,16 @@ function PageInner() {
   return (
     <>
       {!booted && <SSHBoot onComplete={handleBootComplete} />}
-      <div
-        className={`min-h-dvh h-dvh transition-opacity duration-500 ${booted ? 'opacity-100' : 'opacity-0'}`}
-      >
-        <Terminal
-          key={terminalKey}
-          initialCmd={initialCmd ? `/${initialCmd}` : undefined}
-          initialQ={initialQ ?? undefined}
-        />
-      </div>
+      {/* Mount terminal only after boot so the hidden input is not focused while
+          Enter-to-skip is handled on the overlay (otherwise key events hit /clear, etc.) */}
+      {booted && (
+        <div className="min-h-dvh h-dvh animate-in fade-in-0 duration-500">
+          <Terminal
+            initialCmd={initialCmd ? `/${initialCmd}` : undefined}
+            initialQ={initialQ ?? undefined}
+          />
+        </div>
+      )}
     </>
   )
 }

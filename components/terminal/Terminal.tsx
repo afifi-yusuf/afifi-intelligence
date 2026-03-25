@@ -238,24 +238,48 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           scrollToBottom()
         }
 
-        setBlocks(prev =>
-          prev.map(b =>
-            b.id === streamId && b.kind === 'streaming'
-              ? { ...b, done: true }
-              : b
-          )
-        )
-      } catch (err: unknown) {
-        setBlocks(prev => prev.filter(b => b.id !== thinkingId && b.id !== streamId))
-        if (err instanceof Error && err.name === 'AbortError') {
+        if (!accumulated.trim()) {
           setBlocks(prev =>
             prev.map(b =>
               b.id === streamId && b.kind === 'streaming'
-                ? { ...b, text: b.kind === 'streaming' ? b.text + ' [interrupted]' : '[interrupted]', done: true }
+                ? {
+                    ...b,
+                    text: '(empty response — try again or use a /command)',
+                    done: true,
+                  }
                 : b
             )
           )
         } else {
+          setBlocks(prev =>
+            prev.map(b =>
+              b.id === streamId && b.kind === 'streaming'
+                ? { ...b, done: true }
+                : b
+            )
+          )
+        }
+      } catch (err: unknown) {
+        const aborted = err instanceof Error && err.name === 'AbortError'
+        setBlocks(prev => {
+          const hasStream = prev.some(b => b.id === streamId && b.kind === 'streaming')
+          if (aborted) {
+            if (hasStream) {
+              return prev.map(b =>
+                b.id === streamId && b.kind === 'streaming'
+                  ? {
+                      ...b,
+                      text: (b.text || '') + (b.text ? ' ' : '') + '[interrupted]',
+                      done: true,
+                    }
+                  : b
+              )
+            }
+            return prev.filter(b => b.id !== thinkingId)
+          }
+          return prev.filter(b => b.id !== thinkingId && b.id !== streamId)
+        })
+        if (!aborted) {
           pushOutput([
             {
               type: 'error',
@@ -283,20 +307,24 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
       // Submit
       if (e.key === 'Enter') {
         e.preventDefault()
+        if (e.nativeEvent.isComposing) return
+        if (e.repeat) return
         if (suggestions.length > 0 && suggestionIndex >= 0) {
           setInput('/' + suggestions[suggestionIndex])
           setSuggestions([])
           setSuggestionIndex(-1)
           return
         }
+        const line = (inputRef.current?.value ?? input).trim()
+        if (!line) return
         if (isStreaming || streamingLockRef.current) return
-        executeInput(input)
+        executeInput(line)
         return
       }
 
       // Cancel stream
       if (e.key === 'Escape') {
-        if (isStreaming && abortRef.current) {
+        if ((isStreaming || streamingLockRef.current) && abortRef.current) {
           abortRef.current.abort()
         }
         setSuggestions([])
@@ -376,7 +404,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
       // Ctrl+C to cancel stream
       if (e.key === 'c' && e.ctrlKey) {
-        if (isStreaming && abortRef.current) {
+        if ((isStreaming || streamingLockRef.current) && abortRef.current) {
           abortRef.current.abort()
         }
         return
