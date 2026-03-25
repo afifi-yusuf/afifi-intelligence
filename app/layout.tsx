@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: 'Personal terminal. Type a command or ask me anything.',
   generator: 'v0.app',
   icons: {
-    icon: [{ url: '/yusuf-chibi-icon.jpg', type: 'image/jpeg', sizes: '512x512' }],
+    icon: [{ url: '/app-icon.jpg', type: 'image/jpeg', sizes: '512x512' }],
     apple: '/apple-touch-icon.jpg',
   },
   openGraph: {
