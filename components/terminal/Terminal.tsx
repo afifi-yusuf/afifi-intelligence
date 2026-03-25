@@ -47,6 +47,8 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
   const outputRef = useRef<HTMLDivElement>(null)
   const abortRef = useRef<AbortController | null>(null)
   const streamingIdRef = useRef<string | null>(null)
+  /** Sync guard — isStreaming lags one frame; blocks double-Enter races on /api/ask */
+  const streamingLockRef = useRef(false)
   const didRunInitialRef = useRef(false)
   const executeInputRef = useRef<(input: string) => void>(() => {})
 
@@ -125,14 +127,14 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
       if (!trimmed) return
 
       setStatusHint(false)
-      pushUserInput(trimmed)
-      setHistory(h => [trimmed, ...h.slice(0, 99)])
-      setHistoryIndex(-1)
       setInput('')
       setSuggestions([])
 
       // /clear
       if (trimmed === '/clear' || trimmed === '/clear ') {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
         setBlocks([])
         return
       }
@@ -141,6 +143,9 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
       if (trimmed.startsWith('/') && !trimmed.startsWith('/ask ')) {
         const result = runCommand(trimmed)
         if (result !== null) {
+          pushUserInput(trimmed)
+          setHistory(h => [trimmed, ...h.slice(0, 99)])
+          setHistoryIndex(-1)
           pushOutput(result)
           return
         }
@@ -155,11 +160,17 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         : trimmed
 
       if (!question) {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
         pushOutput([{ type: 'error', text: 'Usage: /ask <your question>' }])
         return
       }
 
       if (questionCount >= MAX_QUESTIONS) {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
         pushOutput([
           {
             type: 'text',
@@ -171,6 +182,14 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         return
       }
 
+      if (streamingLockRef.current) {
+        return
+      }
+      streamingLockRef.current = true
+
+      pushUserInput(trimmed)
+      setHistory(h => [trimmed, ...h.slice(0, 99)])
+      setHistoryIndex(-1)
       setQuestionCount(q => q + 1)
       setIsStreaming(true)
 
@@ -245,6 +264,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           ])
         }
       } finally {
+        streamingLockRef.current = false
         setIsStreaming(false)
         streamingIdRef.current = null
         abortRef.current = null
@@ -269,7 +289,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           setSuggestionIndex(-1)
           return
         }
-        if (isStreaming) return
+        if (isStreaming || streamingLockRef.current) return
         executeInput(input)
         return
       }
@@ -444,11 +464,14 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         {MOBILE_CHIPS.map(chip => (
           <button
             key={chip}
+            type="button"
+            disabled={isStreaming}
             onClick={(e) => {
               e.stopPropagation()
+              if (isStreaming) return
               executeInput(chip)
             }}
-            className="shrink-0 px-2.5 py-1.5 rounded font-mono text-[11px] text-terminal-accent border transition-colors hover:bg-terminal-surface min-h-[36px] touch-manipulation"
+            className="shrink-0 px-2.5 py-1.5 rounded font-mono text-[11px] text-terminal-accent border transition-colors hover:bg-terminal-surface min-h-[36px] touch-manipulation disabled:opacity-40 disabled:pointer-events-none"
             style={{ borderColor: 'var(--terminal-border)' }}
           >
             {chip}

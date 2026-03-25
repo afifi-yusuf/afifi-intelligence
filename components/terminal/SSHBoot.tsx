@@ -258,6 +258,8 @@ export default function SSHBoot({ onComplete }: Props) {
 
   const sshTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
   const exitStartedRef = useRef(false)
+  /** Prevents double Enter on splash before phase flips to ssh (stale listener) */
+  const splashHandoffRef = useRef(false)
 
   const clearSshTimers = useCallback(() => {
     sshTimersRef.current.forEach(clearTimeout)
@@ -324,6 +326,8 @@ export default function SSHBoot({ onComplete }: Props) {
 
   const finishSplash = useCallback(() => {
     if (phase !== 'splash' || !waitingForEnter) return
+    if (splashHandoffRef.current) return
+    splashHandoffRef.current = true
     startSshSequence()
   }, [phase, waitingForEnter, startSshSequence])
 
