@@ -317,7 +317,7 @@ export default function SSHBoot({ onComplete }: Props) {
   }, [clearSshTimers, pushSshTimer, runExit])
 
   const skipSsh = useCallback(() => {
-    if (phase !== 'ssh') return
+    if (phase !== 'ssh' || exitStartedRef.current) return
     clearSshTimers()
     setSshLines(SSH_SCRIPT.map(l => l.text))
     setSshPartial('')
@@ -326,6 +326,7 @@ export default function SSHBoot({ onComplete }: Props) {
 
   const finishSplash = useCallback(() => {
     if (phase !== 'splash' || !waitingForEnter) return
+    if (exitStartedRef.current) return
     if (splashHandoffRef.current) return
     splashHandoffRef.current = true
     startSshSequence()
@@ -367,13 +368,14 @@ export default function SSHBoot({ onComplete }: Props) {
   }, [phase, finishSplash, skipSsh])
 
   const handleRootClick = useCallback(() => {
+    if (exitStartedRef.current) return
     if (phase === 'splash') finishSplash()
     else skipSsh()
   }, [phase, finishSplash, skipSsh])
 
   return (
     <div
-      className="terminal-text fixed inset-0 flex flex-col pt-[env(safe-area-inset-top)] bg-black"
+      className="terminal-text fixed inset-0 flex flex-col pt-[env(safe-area-inset-top)] bg-black touch-manipulation"
       style={{
         zIndex: 50,
         opacity: fading ? 0 : 1,
