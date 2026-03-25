@@ -552,7 +552,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 bg-terminal-bg"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="font-mono text-[13px] sm:text-[14px] text-terminal-accent shrink-0">{'>'}</span>
+          <span className="font-mono text-[16px] sm:text-[14px] text-terminal-accent shrink-0">{'>'}</span>
           <div className="relative flex-1 min-w-0 min-h-[1.35em] flex items-center">
             <input
               ref={inputRef}
@@ -570,14 +570,14 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
               aria-autocomplete={suggestions.length > 0 ? 'list' : undefined}
               aria-expanded={suggestions.length > 0}
               placeholder={isStreaming ? '' : undefined}
-              className={`absolute inset-0 w-full bg-transparent border-none outline-none font-mono text-[13px] sm:text-[14px] caret-terminal-accent placeholder:text-terminal-dim ${
+              className={`absolute inset-0 w-full bg-transparent border-none outline-none font-mono text-[16px] sm:text-[14px] caret-terminal-accent placeholder:text-terminal-dim ${
                 ghostSuffix ? 'text-transparent' : 'text-terminal-fg'
               }`}
               style={{ caretColor: 'var(--terminal-accent)' }}
             />
             {ghostSuffix ? (
               <div
-                className="pointer-events-none absolute inset-0 flex items-center font-mono text-[13px] sm:text-[14px] min-w-0 overflow-hidden whitespace-pre"
+                className="pointer-events-none absolute inset-0 flex items-center font-mono text-[16px] sm:text-[14px] min-w-0 overflow-hidden whitespace-pre"
                 aria-hidden
               >
                 <span className="text-terminal-fg shrink-0">{input}</span>
