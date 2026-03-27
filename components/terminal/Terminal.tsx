@@ -177,7 +177,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
             text: "You've been curious — I appreciate that. For longer conversations, reach out directly:",
           },
           { type: 'blank' },
-          { type: 'link', text: 'yusuf@yusufafifi.com', href: 'mailto:yusuf@yusufafifi.com' },
+          { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' },
         ])
         return
       }

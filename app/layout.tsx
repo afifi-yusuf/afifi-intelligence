@@ -9,7 +9,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Yusuf Afifi — Software Engineer & AI Builder',
+  title: 'Yusuf Afifi — Computer Science @ UCL · AI & systems',
   description: 'Personal terminal. Type a command or ask me anything.',
   generator: 'v0.app',
   icons: {
@@ -17,13 +17,13 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.jpg',
   },
   openGraph: {
-    title: 'Yusuf Afifi — Software Engineer & AI Builder',
+    title: 'Yusuf Afifi — Computer Science @ UCL · AI & systems',
     description: 'Personal terminal. Type a command or ask me anything.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Yusuf Afifi — Software Engineer & AI Builder',
+    title: 'Yusuf Afifi — Computer Science @ UCL · AI & systems',
     description: 'Personal terminal. Type a command or ask me anything.',
   },
 }
@@ -32,14 +32,13 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Yusuf Afifi',
-  jobTitle: 'Software Engineer & AI Builder',
+  jobTitle: 'BSc Computer Science student, AI & systems',
   url: 'https://yusufafifi.com',
   sameAs: [
-    'https://github.com/yusufafifi',
-    'https://linkedin.com/in/yusufafifi',
-    'https://x.com/yusufafifi',
+    'https://github.com/afifi-yusuf',
+    'https://linkedin.com/in/yusuf-afif1/',
   ],
-  description: 'Software Engineer & AI Builder based in San Francisco.',
+  description: 'Computer Science undergraduate at UCL; AI agents, RAG, and on-device models. Bay Area & London.',
 }
 
 export default function RootLayout({

@@ -32,10 +32,10 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'line', segments: [{ type: 'accent', text: '/projects' }, { type: 'dim', text: 'selected work' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/experience' }, { type: 'dim', text: 'work history' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/education' }, { type: 'dim', text: 'academic background' }] },
-    { type: 'line', segments: [{ type: 'accent', text: '/journey' }, { type: 'dim', text: 'four cities, one story' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '/journey' }, { type: 'dim', text: 'dubai · london · bay area' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/now' }, { type: 'dim', text: 'what I\'m working on' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/contact' }, { type: 'dim', text: 'get in touch' }] },
-    { type: 'line', segments: [{ type: 'accent', text: '/links' }, { type: 'dim', text: 'GitHub, LinkedIn, X, etc.' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '/links' }, { type: 'dim', text: 'GitHub, LinkedIn, site' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/resume' }, { type: 'dim', text: 'resume + PDF download' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/reading' }, { type: 'dim', text: 'books and papers' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/values' }, { type: 'dim', text: 'what I believe in' }] },
@@ -50,20 +50,22 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
 
   about: () => [
     { type: 'green', text: 'Yusuf Afifi' },
-    { type: 'dim', text: 'Software Engineer & AI Builder' },
+    { type: 'dim', text: 'Computer Science @ UCL · AI, agents, and systems' },
     { type: 'blank' },
-    { type: 'text', text: 'I build things at the intersection of software and intelligence.' },
-    { type: 'text', text: 'Shaped by four cities across three continents — Alexandria, Dubai,' },
-    { type: 'text', text: 'London, and San Francisco — each one left something permanent in' },
-    { type: 'text', text: 'how I think and what I care about.' },
+    { type: 'text', text: 'I work on production AI: agents, RAG, cloud systems, and on-device' },
+    { type: 'text', text: 'models. Recently I shipped Gen AI tooling at Amazon Prime Video' },
+    { type: 'text', text: '(text-to-SQL, Bedrock, internal UIs) and climate-risk ML at Angel Lane' },
+    { type: 'text', text: 'Partners.' },
     { type: 'blank' },
-    { type: 'text', text: 'Currently based in San Francisco, working on AI-native products' },
-    { type: 'text', text: 'and the infrastructure that makes intelligent systems production-ready.' },
+    { type: 'text', text: 'Based in the Bay Area (San Carlos, CA). Undergrad at UCL in London:' },
+    { type: 'text', text: 'BSc (Hons) Computer Science with a minor in Applied Mathematics,' },
+    { type: 'text', text: 'First Class expected (2026). Before that, IB at JESS Dubai.' },
     { type: 'blank' },
-    { type: 'dim', text: 'The boring problems turned out to be the interesting ones.' },
+    { type: 'dim', text: 'I care about shipping things that are reliable, observable, and private' },
+    { type: 'dim', text: 'when it matters — like on-device HealthKit RAG in my iOS app Petals.' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/journey', command: '/journey' }, { type: 'dim', text: 'for the full story' }] },
-    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'for selected work' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/journey', command: '/journey' }, { type: 'dim', text: 'for places and chapters' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'for projects' }] },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to get in touch' }] },
   ],
 
@@ -71,127 +73,115 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'header', text: 'Technical Skills' },
     { type: 'blank' },
     { type: 'green', text: 'Languages' },
-    { type: 'text', text: '  Python · TypeScript · Go · Rust · SQL · C++' },
+    { type: 'text', text: '  Python · TypeScript · Java · C · MATLAB · Swift (iOS)' },
     { type: 'blank' },
     { type: 'green', text: 'AI / ML' },
-    { type: 'text', text: '  PyTorch · JAX · LLM fine-tuning · inference optimization' },
-    { type: 'text', text: '  transformer architecture · RAG · agent systems · RLHF' },
+    { type: 'text', text: '  RAG · agentic LLMs · text-to-SQL · on-device models (Apple Foundation' },
+    { type: 'text', text: '  Models, Neural Engine) · Whisper · OpenVINO · TensorFlow · scikit-learn' },
     { type: 'blank' },
-    { type: 'green', text: 'Backend & Systems' },
-    { type: 'text', text: '  Node.js · FastAPI · gRPC · PostgreSQL · Redis' },
-    { type: 'text', text: '  Kafka · distributed systems · real-time pipelines' },
+    { type: 'green', text: 'Cloud & Data' },
+    { type: 'text', text: '  AWS (Bedrock, Lambda, API Gateway WebSocket, Kendra, Redshift,' },
+    { type: 'text', text: '  CDK, CloudWatch) · SQL pipelines · observability & cost alarms' },
     { type: 'blank' },
-    { type: 'green', text: 'Infrastructure' },
-    { type: 'text', text: '  AWS · GCP · Docker · Kubernetes · Terraform' },
-    { type: 'text', text: '  CI/CD · observability · edge deployment' },
+    { type: 'green', text: 'Frontend & Apps' },
+    { type: 'text', text: '  React · React Native (Windows) · static & internal web UIs · iOS' },
     { type: 'blank' },
-    { type: 'green', text: 'Frontend' },
-    { type: 'text', text: '  React · Next.js · Tailwind CSS · Framer Motion' },
+    { type: 'green', text: 'Backend' },
+    { type: 'text', text: '  FastAPI · realtime/offline speech and scoring pipelines' },
     { type: 'blank' },
-    { type: 'green', text: 'Tools & Practices' },
-    { type: 'text', text: '  Git · Linux · Neovim · Claude Code · Cursor' },
-    { type: 'text', text: '  system design · code review · technical writing' },
+    { type: 'green', text: 'Other' },
+    { type: 'text', text: '  Teaching assistant (UCL: C, Java, Python, Systems) · CI/CD · IAM' },
+    { type: 'text', text: '  Git · technical writing · climate risk modelling (Merton, VAR)' },
   ],
 
   projects: () => [
-    { type: 'header', text: 'Selected Projects' },
+    { type: 'header', text: 'Projects & Research' },
     { type: 'blank' },
-    { type: 'green', text: 'LLM Inference Optimization' },
-    { type: 'text', text: 'Systems-level tooling for transformer inference. 40% latency' },
-    { type: 'text', text: 'reduction on standard benchmarks through kernel-level attention' },
-    { type: 'text', text: 'approximation.' },
-    { type: 'line', segments: [{ type: 'tag', text: '[Python]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[CUDA]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[PyTorch]' }] },
+    { type: 'green', text: 'Petals — AI health & wellness (iOS)' },
+    { type: 'text', text: 'iOS app using Apple Foundation Models on-device with a RAG layer on' },
+    { type: 'text', text: 'HealthKit. Instruction-tuned "Petal" chatbot, meditations, journaling,' },
+    { type: 'text', text: 'wellness plans — privacy-first, Neural Engine inference.' },
+    { type: 'line', segments: [{ type: 'tag', text: '[Swift]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[On-device AI]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[RAG]' }] },
     { type: 'blank' },
-    { type: 'green', text: 'Real-time Feature Pipeline' },
-    { type: 'text', text: 'Distributed ML feature engineering system processing 50k events/sec.' },
-    { type: 'text', text: 'Built for a fintech production environment.' },
-    { type: 'line', segments: [{ type: 'tag', text: '[Go]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Kafka]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[PostgreSQL]' }] },
+    { type: 'green', text: 'ReadingStar — accessibility karaoke (Windows)' },
+    { type: 'text', text: 'With Intel & National Autistic Society: offline speech-to-text, lyric' },
+    { type: 'text', text: 'alignment, scoring; React Native Windows + FastAPI, Whisper, OpenVINO' },
+    { type: 'text', text: 'on NPU. National school rollout; Intel featured as first education NPU app.' },
+    { type: 'line', segments: [{ type: 'tag', text: '[React Native]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[FastAPI]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Whisper]' }] },
     { type: 'blank' },
-    { type: 'green', text: 'Sparse Attention Contribution' },
-    { type: 'text', text: 'Open-source extension to a widely used NLP library.' },
-    { type: 'text', text: 'Merged into main — used by hundreds of researchers.' },
-    { type: 'line', segments: [{ type: 'tag', text: '[Python]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[PyTorch]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Open Source]' }] },
+    { type: 'green', text: 'ML for fluid dynamics (research)' },
+    { type: 'text', text: 'Undergrad research with an Imperial College Research Associate: convolutional' },
+    { type: 'text', text: 'autoencoder for shallow-water simulation, LSTM in latent space, TensorFlow.' },
+    { type: 'line', segments: [{ type: 'tag', text: '[TensorFlow]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[CFD]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Research]' }] },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/experience', command: '/experience' }, { type: 'dim', text: 'for work history' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/experience', command: '/experience' }, { type: 'dim', text: 'for internships' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'link', text: 'github.com/afifi-yusuf', href: 'https://github.com/afifi-yusuf' }] },
   ],
 
   experience: () => [
     { type: 'header', text: 'Work Experience' },
     { type: 'blank' },
-    { type: 'green', text: 'Software Engineer — AI Startup' },
-    { type: 'dim', text: '2024 — Present · San Francisco' },
-    { type: 'text', text: 'Building AI-native products. Focused on the application layer —' },
-    { type: 'text', text: 'where models meet real products and real people.' },
+    { type: 'green', text: 'Software Development Engineer Intern — Gen AI' },
+    { type: 'dim', text: 'Amazon Prime Video · Jun — Sep 2025 · London' },
+    { type: 'text', text: 'Text-to-SQL agent for SVOD accounting: RAG on AWS Bedrock (Claude),' },
+    { type: 'text', text: 'Kendra index, Redshift; cut ad-hoc query time about 75%.' },
+    { type: 'text', text: 'Shipped internal React + Lambda/WebSocket API GW chat UI; AWS CDK & CI/CD;' },
+    { type: 'text', text: 'IAM least-privilege; CloudWatch dashboards/alarms; 200+ weekly users globally.' },
+    { type: 'line', segments: [{ type: 'tag', text: '[AWS]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[React]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Agents]' }] },
     { type: 'blank' },
-    { type: 'green', text: 'Software Engineer Intern — DeepMind' },
-    { type: 'dim', text: '2022 · London' },
-    { type: 'text', text: 'Applied research engineering on language model evaluation' },
-    { type: 'text', text: 'infrastructure. Worked with the Gemini pre-training team.' },
-    { type: 'line', segments: [{ type: 'tag', text: '[Python]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[JAX]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[GCP]' }] },
-    { type: 'blank' },
-    { type: 'green', text: 'Software Engineer — Fintech Startup' },
-    { type: 'dim', text: '2021 — 2023 · London' },
-    { type: 'text', text: 'Full-stack engineering on a real-time algorithmic trading platform.' },
-    { type: 'text', text: 'From zero to production.' },
-    { type: 'line', segments: [{ type: 'tag', text: '[TypeScript]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[React]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Node.js]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[PostgreSQL]' }] },
+    { type: 'green', text: 'Technology Summer Analyst — Data / ML for Finance' },
+    { type: 'dim', text: 'Angel Lane Partners (ALP Tech) · Jun — Aug 2024 · London' },
+    { type: 'text', text: 'GreenGuard climate risk: physical, transition, macro exposure; KNN &' },
+    { type: 'text', text: 'K-means for missing data; MATLAB & Python — Merton default, VAR scenarios;' },
+    { type: 'text', text: 'static frontend for client stress-test views.' },
+    { type: 'line', segments: [{ type: 'tag', text: '[Python]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[MATLAB]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[climate ML]' }] },
   ],
 
   education: () => [
     { type: 'header', text: 'Education' },
     { type: 'blank' },
     { type: 'green', text: 'University College London (UCL)' },
-    { type: 'text', text: 'MSc Computer Science — AI Track' },
-    { type: 'dim', text: '2019 — 2024 · London, UK' },
+    { type: 'text', text: 'BSc (Hons) Computer Science — minor in Applied Mathematics' },
+    { type: 'dim', text: 'Sep 2023 — Jun 2026 (expected) · London, UK · First Class (expected)' },
     { type: 'blank' },
-    { type: 'text', text: 'Studied at the intersection of large language models and systems' },
-    { type: 'text', text: 'engineering. Focused on efficiency: how to make intelligent systems' },
-    { type: 'text', text: 'faster, cheaper, and more reliable in production.' },
+    { type: 'text', text: 'Teaching Assistant: COMP0002 (C), COMP0004 (Java), ENGF0034 (Python),' },
+    { type: 'text', text: 'COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.' },
+    { type: 'blank' },
+    { type: 'green', text: 'JESS Dubai' },
+    { type: 'text', text: 'International Baccalaureate Diploma Programme — 43 / 45' },
+    { type: 'dim', text: 'Aug 2021 — May 2023 · Dubai, UAE' },
   ],
 
   journey: () => [
-    { type: 'header', text: 'Four Cities. One Story.' },
+    { type: 'header', text: 'Places & chapters' },
     { type: 'blank' },
-    { type: 'green', text: 'Alexandria — 1999–2017' },
-    { type: 'text', text: 'Where it all began. Born on the Mediterranean shore. The city that' },
-    { type: 'text', text: 'taught me how to see — slowly, curiously, with depth before speed.' },
-    { type: 'text', text: 'That constant horizon does something to you.' },
+    { type: 'green', text: 'Dubai — JESS' },
+    { type: 'text', text: 'IB years: discipline, breadth, and the push that got me to London' },
+    { type: 'text', text: 'for university.' },
     { type: 'blank' },
-    { type: 'green', text: 'Dubai — 2017–2019' },
-    { type: 'text', text: 'Where ambition became real. A city built on speed and scale that' },
-    { type: 'text', text: 'recalibrates your sense of what is possible. Developed discipline,' },
-    { type: 'text', text: 'tolerance for discomfort, and professional momentum.' },
+    { type: 'green', text: 'London — UCL & internships' },
+    { type: 'text', text: 'Undergraduate CS + applied math; teaching, societies, Amazon Prime Video' },
+    { type: 'text', text: 'Gen AI internship, Angel Lane climate ML, and research with Imperial.' },
     { type: 'blank' },
-    { type: 'green', text: 'London — 2019–2024' },
-    { type: 'text', text: 'Where work became serious. UCL, research, engineering, and the' },
-    { type: 'text', text: 'projects that taught me how to build under pressure. The densest' },
-    { type: 'text', text: 'chapter — portfolio, internships, and serious technical depth.' },
-    { type: 'blank' },
-    { type: 'green', text: 'San Francisco — 2024–Present' },
-    { type: 'text', text: 'The frontier. Where the most interesting problems in AI are being' },
-    { type: 'text', text: 'worked on right now. Focused on the application layer and building' },
-    { type: 'text', text: 'what comes next.' },
+    { type: 'green', text: 'Bay Area — San Carlos, CA' },
+    { type: 'text', text: 'Home base now: building Petals, ReadingStar-style problems, and the' },
+    { type: 'text', text: 'next set of on-device and cloud AI products.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/about', command: '/about' }, { type: 'dim', text: 'for who I am now' }] },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to connect' }] },
   ],
 
   now: () => [
-    { type: 'header', text: 'Right Now' },
+    { type: 'header', text: 'Right now' },
     { type: 'blank' },
-    { type: 'text', text: 'Based in San Francisco.' },
-    { type: 'text', text: 'Building AI products and working on hard problems.' },
+    { type: 'text', text: 'Finishing BSc at UCL (2026) while based in San Carlos, CA.' },
+    { type: 'text', text: 'Shipping Petals on iOS; iterating on on-device foundation-model UX.' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: 'Reading' }, { type: 'text', text: 'Scaling laws research. Philosophy of mind.' }] },
-    { type: 'line', segments: [{ type: 'text', text: '           ' }, { type: 'text', text: 'Anything that challenges a comfortable assumption.' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Thinking about' }, { type: 'text', text: ' private inference, RAG that respects user data,' }] },
+    { type: 'line', segments: [{ type: 'text', text: '                ' }, { type: 'text', text: ' and production agent workflows (evals, observability).' }] },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: 'Building' }, { type: 'text', text: 'Tools that make AI more useful, more reliable,' }] },
-    { type: 'line', segments: [{ type: 'text', text: '           ' }, { type: 'text', text: 'and more honest.' }] },
-    { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: 'Exploring' }, { type: 'text', text: 'The edges of what reasoning systems can currently' }] },
-    { type: 'line', segments: [{ type: 'text', text: '           ' }, { type: 'text', text: 'do — and why they fail when they do.' }] },
-    { type: 'blank' },
-    { type: 'text', text: 'Open to interesting conversations, collaborations,' },
-    { type: 'text', text: 'and things worth caring about.' },
+    { type: 'text', text: 'Open to internships, research collaborations, and sharp product' },
+    { type: 'text', text: 'conversations — especially at the AI / systems boundary.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to reach me' }] },
   ],
@@ -199,46 +189,49 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   contact: () => [
     { type: 'header', text: 'Get in Touch' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'yusuf@yusufafifi.com', href: 'mailto:yusuf@yusufafifi.com' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'github.com/yusufafifi', href: 'https://github.com/yusufafifi' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'LinkedIn' }, { type: 'link', text: 'linkedin.com/in/yusufafifi', href: 'https://linkedin.com/in/yusufafifi' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'X' }, { type: 'link', text: 'x.com/yusufafifi', href: 'https://x.com/yusufafifi' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Phone (US)' }, { type: 'link', text: '+1 (650) 272-4135', href: 'tel:+16502724135' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Phone (UK)' }, { type: 'link', text: '+44 7717 399868', href: 'tel:+447717399868' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Site' }, { type: 'link', text: 'yusufafifi.com', href: 'https://yusufafifi.com' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'github.com/afifi-yusuf', href: 'https://github.com/afifi-yusuf' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'LinkedIn' }, { type: 'link', text: 'linkedin.com/in/yusuf-afif1', href: 'https://linkedin.com/in/yusuf-afif1/' }] },
     { type: 'blank' },
-    { type: 'text', text: 'Always open to conversations about interesting problems,' },
-    { type: 'text', text: 'potential collaboration, and ideas worth exploring.' },
-    { type: 'dim', text: 'No deck required.' },
+    { type: 'dim', text: 'San Carlos, CA (Bay Area)' },
+    { type: 'blank' },
+    { type: 'text', text: 'Always up for interesting problems, collaboration, and internships.' },
   ],
 
   links: () => [
     { type: 'header', text: 'Links' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'https://github.com/yusufafifi', href: 'https://github.com/yusufafifi' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'LinkedIn' }, { type: 'link', text: 'https://linkedin.com/in/yusufafifi', href: 'https://linkedin.com/in/yusufafifi' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'X / Twitter' }, { type: 'link', text: 'https://x.com/yusufafifi', href: 'https://x.com/yusufafifi' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'yusuf@yusufafifi.com', href: 'mailto:yusuf@yusufafifi.com' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'Website' }, { type: 'link', text: 'https://yusufafifi.com', href: 'https://yusufafifi.com' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'https://github.com/afifi-yusuf', href: 'https://github.com/afifi-yusuf' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'LinkedIn' }, { type: 'link', text: 'https://linkedin.com/in/yusuf-afif1/', href: 'https://linkedin.com/in/yusuf-afif1/' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }] },
   ],
 
   resume: () => [
     { type: 'header', text: 'Resume' },
     { type: 'blank' },
     { type: 'green', text: 'Yusuf Afifi' },
-    { type: 'text', text: 'Software Engineer & AI Builder' },
-    { type: 'dim', text: 'San Francisco, CA' },
+    { type: 'text', text: 'BSc Computer Science @ UCL · AI, agents, on-device models' },
+    { type: 'dim', text: 'San Carlos, CA · London (university)' },
     { type: 'blank' },
     { type: 'green', text: 'Experience' },
-    { type: 'text', text: '  AI Startup — Software Engineer — 2024–Present' },
-    { type: 'text', text: '  DeepMind — Software Engineer Intern — 2022' },
-    { type: 'text', text: '  Fintech Startup — Software Engineer — 2021–2023' },
+    { type: 'text', text: '  Amazon Prime Video — SDE Intern, Gen AI — Summer 2025' },
+    { type: 'text', text: '  Angel Lane Partners (ALP Tech) — Technology Summer Analyst — 2024' },
     { type: 'blank' },
     { type: 'green', text: 'Education' },
-    { type: 'text', text: '  UCL — MSc Computer Science (AI) — 2019–2024' },
+    { type: 'text', text: '  UCL — BSc (Hons) CS + Applied Math minor — 2023–2026 (expected)' },
+    { type: 'text', text: '  JESS Dubai — IB 43/45 — 2021–2023' },
     { type: 'blank' },
-    { type: 'green', text: 'Skills' },
-    { type: 'text', text: '  Python, TypeScript, Go, Rust, PyTorch, JAX, React, Next.js,' },
-    { type: 'text', text: '  PostgreSQL, Kafka, AWS, GCP, Docker, Kubernetes' },
+    { type: 'green', text: 'Highlights' },
+    { type: 'text', text: '  Petals (iOS, Apple Foundation Models + HealthKit RAG)' },
+    { type: 'text', text: '  ReadingStar (Intel / NAS, Whisper, OpenVINO, React Native Win)' },
+    { type: 'text', text: '  CFD ML research (TensorFlow autoencoder + LSTM latent dynamics)' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'dim', text: 'Download PDF:' }, { type: 'link', text: 'resume.pdf', href: '/resume.pdf' }] },
+    { type: 'text', text: 'PDF: request by email — this site does not host the file yet.' },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com?subject=Resume' }] },
   ],
 
   reading: () => [
@@ -272,15 +265,13 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   uses: () => [
     { type: 'header', text: 'Tools & Setup' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: 'Editor' }, { type: 'text', text: 'Cursor / Neovim' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'Terminal' }, { type: 'text', text: 'Claude Code · Warp · iTerm2' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'Languages' }, { type: 'text', text: 'Python · TypeScript · Go · Rust' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'AI' }, { type: 'text', text: 'Claude · GPT-4 · local models' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'Infra' }, { type: 'text', text: 'AWS · GCP · Vercel · Docker' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'DB' }, { type: 'text', text: 'PostgreSQL · Redis · DynamoDB' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'OS' }, { type: 'text', text: 'macOS · Linux (Ubuntu)' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'Font' }, { type: 'text', text: 'JetBrains Mono' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'Theme' }, { type: 'text', text: 'Dark, always' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Editor' }, { type: 'text', text: 'Cursor · Xcode · VS family' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Terminal' }, { type: 'text', text: 'Claude Code · this site (Next.js)' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'AI stack' }, { type: 'text', text: 'AWS Bedrock · Kendra · Whisper · OpenVINO · Apple FM' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Mobile / desktop' }, { type: 'text', text: 'iOS · React Native Windows' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'OS' }, { type: 'text', text: 'macOS · Windows (for ReadingStar stack)' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Font' }, { type: 'text', text: 'System mono on this site' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Theme' }, { type: 'text', text: 'Dark terminal — always' }] },
   ],
 
   // Easter eggs
@@ -296,9 +287,9 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'text', text: 'Always open to interesting opportunities.' },
     { type: 'text', text: 'Especially if the problem is hard and the team is serious.' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'link', text: 'yusuf@yusufafifi.com', href: 'mailto:yusuf@yusufafifi.com' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }] },
   ],
-  coffee: () => [{ type: 'dim', text: 'I take mine black. Let\'s talk: ' }, { type: 'link', text: 'yusuf@yusufafifi.com', href: 'mailto:yusuf@yusufafifi.com' }],
+  coffee: () => [{ type: 'dim', text: 'I take mine black. Let\'s talk: ' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }],
   secret: () => [
     { type: 'green', text: 'You found this.' },
     { type: 'blank' },
@@ -356,7 +347,7 @@ export function runCommand(input: string): OutputSegment[] | null {
 
 export const WELCOME_SEGMENTS: OutputSegment[] = [
   { type: 'green', text: 'yusuf afifi' },
-  { type: 'dim', text: 'software engineer & AI builder' },
+  { type: 'dim', text: 'computer science @ ucl · ai, agents, on-device models' },
   { type: 'blank' },
   { type: 'text', text: 'Welcome. This is my personal site — it runs like a terminal.' },
   { type: 'text', text: 'Type a command or ask me anything.' },
@@ -365,58 +356,54 @@ export const WELCOME_SEGMENTS: OutputSegment[] = [
   { type: 'blank' },
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/help', command: '/help' }, { type: 'dim', text: 'all commands' }] },
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/about', command: '/about' }, { type: 'dim', text: 'who I am' }] },
-  { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'selected work' }] },
-  { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/journey', command: '/journey' }, { type: 'dim', text: 'four cities, one story' }] },
+  { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'projects & research' }] },
+  { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/journey', command: '/journey' }, { type: 'dim', text: 'dubai · london · bay area' }] },
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/skills', command: '/skills' }, { type: 'dim', text: 'technical skills' }] },
   { type: 'blank' },
   { type: 'dim', text: 'Or just type a question — I\'ll answer it.' },
 ]
 
-export const YUSUF_SYSTEM_PROMPT = `You are an AI assistant on Yusuf Afifi's personal website, called "Afifi Intelligence". You know everything about Yusuf and answer questions about him, his work, his background, and his interests. Answer in first person as if relaying Yusuf's perspective, but make it clear you are an AI if asked directly. Use plain terminal-friendly text — no markdown headers, no bold, no bullet symbols except "•". Use spacing and indentation for structure.
+export const YUSUF_SYSTEM_PROMPT = `You are an AI assistant on Yusuf Afifi's personal website, called "Afifi Intelligence". You answer questions about Yusuf, his work, background, and interests. Answer in first person as if relaying Yusuf's perspective, but make it clear you are an AI if asked directly. Use plain terminal-friendly text — no markdown headers, no bold, no bullet symbols except "•". Use spacing and indentation for structure.
 
-Here is everything you know about Yusuf:
+Here is everything you know about Yusuf (from his public resume and site):
 
 IDENTITY
-Yusuf Afifi. Software Engineer & AI Builder. Based in San Francisco. Shaped by four cities across three continents.
-
-JOURNEY
-Alexandria (1999–2017): Born on the Mediterranean shore. Taught to see slowly, curiously, with depth before speed.
-Dubai (2017–2019): Where ambition became real. Built discipline and tolerance for discomfort.
-London (2019–2024): UCL MSc Computer Science (AI Track). DeepMind internship. Fintech startup. Dense chapter of technical depth.
-San Francisco (2024–Present): The frontier. AI-native products. Application layer and what comes next.
-
-EXPERIENCE
-Software Engineer at AI Startup (2024–Present, San Francisco): Building AI-native products, focused on where models meet real people.
-Software Engineer Intern at DeepMind (2022, London): Language model evaluation infrastructure, Gemini pre-training team. Python, JAX, GCP.
-Software Engineer at Fintech Startup (2021–2023, London): Real-time algorithmic trading platform, full-stack, zero to production. TypeScript, React, Node.js, PostgreSQL.
-
-EDUCATION
-UCL — MSc Computer Science, AI Track, 2019–2024, London.
-
-SKILLS
-Languages: Python, TypeScript, Go, Rust, SQL, C++
-AI/ML: PyTorch, JAX, LLM fine-tuning, inference optimization, transformer architecture, RAG, agent systems, RLHF
-Backend: Node.js, FastAPI, gRPC, PostgreSQL, Redis, Kafka, distributed systems, real-time pipelines
-Infra: AWS, GCP, Docker, Kubernetes, Terraform, CI/CD, observability, edge deployment
-Frontend: React, Next.js, Tailwind CSS, Framer Motion
-Tools: Git, Linux, Neovim, Claude Code, Cursor
-
-PROJECTS
-LLM Inference Optimization: 40% latency reduction through kernel-level attention approximation. Python, CUDA, PyTorch.
-Real-time Feature Pipeline: Distributed ML feature system, 50k events/sec, fintech production. Go, Kafka, PostgreSQL.
-Sparse Attention Contribution: Open-source extension merged into widely-used NLP library, used by hundreds of researchers. Python, PyTorch.
-
-VALUES
-Depth over speed. Understanding before optimizing. Context is everything. The boring problems are the interesting ones. Build reliable, not just impressive. Every line of code is a liability until proven otherwise.
-
-CURRENT FOCUS
-Scaling laws, philosophy of mind, AI reliability. Building tools that make AI more useful, reliable, and honest. Exploring the limits of reasoning systems.
+Yusuf Afifi. Undergraduate at UCL (BSc Honours Computer Science, minor in Applied Mathematics). Focus: AI agents, RAG, cloud systems, on-device models. Based in San Carlos, California (Bay Area); studies in London.
 
 CONTACT
-Email: yusuf@yusufafifi.com
-GitHub: github.com/yusufafifi
-LinkedIn: linkedin.com/in/yusufafifi
-X: x.com/yusufafifi
+Email: yusuf.afifi@gmail.com
+Phones: +1 (650) 272-4135 (US), +44 7717 399868 (UK)
+Website: yusufafifi.com
+GitHub: github.com/afifi-yusuf
+LinkedIn: linkedin.com/in/yusuf-afif1/
+
+EDUCATION
+University College London: BSc (Honours) Computer Science, minor Applied Mathematics. Sep 2023 – Jun 2026 (expected), London. First Class Honours (expected). Teaching Assistant for COMP0002 (C), COMP0004 (Java), ENGF0034 (Python), COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.
+JESS Dubai: International Baccalaureate Diploma, 43/45. Aug 2021 – May 2023, Dubai.
+
+EXPERIENCE
+Software Development Engineer Intern, Gen AI — Amazon Prime Video, London, Jun–Sep 2025. Built text-to-SQL agentic solution for Prime Video SVOD accounting (~75% faster ad-hoc queries). RAG with AWS Bedrock (Claude), Kendra index (schemas + business logic), Redshift. Shipped internal React app with Lambda + WebSocket API Gateway chat UI; AWS CDK, CI/CD, least-privilege IAM. CloudWatch dashboards/alarms; ~200+ weekly active users globally.
+
+Technology Summer Analyst — Angel Lane Partners (ALP Tech), London, Jun–Aug 2024. GreenGuard climate risk: physical, transition, macroeconomic exposure. ML preprocessing (KNN, K-means for missing data). MATLAB and Python: Merton model, VAR for stress scenarios. Static frontend for client climate stress tests.
+
+PROJECTS AND RESEARCH
+Petals (Jul 2025 onward): iOS health/wellness app — Apple Foundation Models on Neural Engine, private on-device inference; RAG on Apple HealthKit; instruction-tuned "Petal" chatbot; meditations, AI journaling, wellness plans.
+
+ReadingStar (Apr 2025): Accessibility karaoke Windows app with Intel and National Autistic Society — offline speech-to-text, audio-to-lyric alignment, scoring; React Native Windows; FastAPI backend; Whisper + Intel OpenVINO on NPU; national school distribution; Intel featured as first education app on Intel NPU.
+
+Machine learning for fluid dynamics (Jun 2024+): UCL undergraduate research with Imperial College Research Associate. Convolutional autoencoder for shallow-water simulations in TensorFlow; LSTM in latent space for irregular timesteps; environmental analysis use case.
+
+SKILLS (summary)
+Python, Java, C, TypeScript, MATLAB, Swift (iOS). React, React Native Windows, FastAPI. AWS (Bedrock, Lambda, API Gateway WebSocket, Kendra, Redshift, CDK, CloudWatch). RAG, agentic LLMs, text-to-SQL, Whisper, OpenVINO, TensorFlow, on-device Apple models. Climate/finance ML (Merton, VAR). Teaching, CI/CD, observability.
+
+JOURNEY (short)
+Dubai for IB at JESS; London for UCL and internships; Bay Area (San Carlos) as home while finishing degree and building products.
+
+VALUES
+Depth over speed when it matters. Ship reliable systems: observability, security, and clear evaluation for AI in production. Care about privacy for on-device and health data.
+
+CURRENT FOCUS
+Petals and on-device AI; production agents and RAG; finishing BSc at UCL.
 
 Rules:
 - Be concise and direct. 2–4 sentences for simple questions, more for complex ones.
