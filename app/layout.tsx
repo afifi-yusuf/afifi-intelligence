@@ -38,7 +38,7 @@ const jsonLd = {
     'https://github.com/afifi-yusuf',
     'https://linkedin.com/in/yusuf-afif1/',
   ],
-  description: 'Computer Science undergraduate at UCL; AI agents, RAG, and on-device models. Bay Area & London.',
+  description: 'Computer Science undergraduate at UCL; SWE/AI engineering.',
 }
 
 export default function RootLayout({

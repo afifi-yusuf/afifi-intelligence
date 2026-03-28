@@ -19,7 +19,7 @@ import OutputRenderer from './OutputRenderer'
 import TerminalHeader from './TerminalHeader'
 
 const MAX_QUESTIONS = 20
-const MOBILE_CHIPS = ['/help', '/about', '/projects', '/skills', '/journey', '/contact', '/experience']
+const MOBILE_CHIPS = ['/help', '/about', '/projects', '/skills', '/contact', '/experience']
 
 function generateId() {
   return Math.random().toString(36).slice(2)
