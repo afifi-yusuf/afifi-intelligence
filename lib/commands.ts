@@ -28,7 +28,6 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'header', text: 'Available commands' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '/about' }, { type: 'dim', text: 'who I am' }] },
-    { type: 'line', segments: [{ type: 'accent', text: '/skills' }, { type: 'dim', text: 'technical skills' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/projects' }, { type: 'dim', text: 'selected work' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/experience' }, { type: 'dim', text: 'work history' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/education' }, { type: 'dim', text: 'academic background' }] },
@@ -49,38 +48,13 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'blank' },
     { type: 'text', text: 'Hackathon enthusiast and serial vibe coder (I prefer agentic engineering).' },
     { type: 'text', text: 'I build innovative software — AI and agentic solutions in the cloud,' },
-    { type: 'text', text: 'and optimized inference for OSS models.' },
+    { type: 'text', text: 'and optimized inference for OSS models on hardware accelerators.' },
     { type: 'blank' },
     { type: 'text', text: 'UCL, London — BSc (Hons) Computer Science, minor in Applied' },
     { type: 'text', text: 'Mathematics, First Class expected (2026). Before that, IB at JESS Dubai.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'for projects' }] },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to get in touch' }] },
-  ],
-
-  skills: () => [
-    { type: 'header', text: 'Technical Skills' },
-    { type: 'blank' },
-    { type: 'green', text: 'Languages' },
-    { type: 'text', text: '  Python · TypeScript · Java · C · MATLAB · Swift (iOS)' },
-    { type: 'blank' },
-    { type: 'green', text: 'AI / ML' },
-    { type: 'text', text: '  RAG · agentic LLMs · text-to-SQL · on-device models (Apple Foundation' },
-    { type: 'text', text: '  Models, Neural Engine) · Whisper · OpenVINO · TensorFlow · scikit-learn' },
-    { type: 'blank' },
-    { type: 'green', text: 'Cloud & Data' },
-    { type: 'text', text: '  AWS (Bedrock, Lambda, API Gateway WebSocket, Kendra, Redshift,' },
-    { type: 'text', text: '  CDK, CloudWatch) · SQL pipelines · observability & cost alarms' },
-    { type: 'blank' },
-    { type: 'green', text: 'Frontend & Apps' },
-    { type: 'text', text: '  React · React Native (Windows) · static & internal web UIs · iOS' },
-    { type: 'blank' },
-    { type: 'green', text: 'Backend' },
-    { type: 'text', text: '  FastAPI · realtime/offline speech and scoring pipelines' },
-    { type: 'blank' },
-    { type: 'green', text: 'Other' },
-    { type: 'text', text: '  Teaching assistant (UCL: C, Java, Python, Systems) · CI/CD · IAM' },
-    { type: 'text', text: '  Git · technical writing · climate risk modelling (Merton, VAR)' },
   ],
 
   projects: () => [
@@ -195,12 +169,14 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   now: () => [
     { type: 'header', text: 'Right now' },
     { type: 'blank' },
-    { type: 'text', text: 'Completing my CS bachelor\'s at UCL. Dissertation: combining knowledge' },
-    { type: 'text', text: 'graph context engineering, multi-agent LLMs, and Markov deep RL for' },
-    { type: 'text', text: 'trading.' },
+    { type: 'green', text: 'Dissertation' },
+    { type: 'text', text: 'Finishing my CS bachelor\'s at UCL — knowledge graph context' },
+    { type: 'text', text: 'engineering, multi-agent LLMs, and Markov deep RL for trading.' },
     { type: 'blank' },
-    { type: 'line', segments: [{ type: 'accent', text: 'Thinking about' }, { type: 'text', text: ' automating workflows with browser/desktop agents,' }] },
-    { type: 'line', segments: [{ type: 'text', text: '                ' }, { type: 'text', text: ' agentic payments, RL environments, disaggregated inference.' }] },
+    { type: 'green', text: 'Interests' },
+    { type: 'dim', text: 'Broader R&D threads (not all in the thesis).' },
+    { type: 'text', text: 'Browser/desktop agents for workflow automation; agentic payments;' },
+    { type: 'text', text: 'RL environments; disaggregated inference; inference engineering.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to reach me' }] },
   ],
@@ -233,7 +209,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   'rm': () => [{ type: 'error', text: 'I appreciate the ambition, but no.' }],
   vim: () => [{ type: 'dim', text: 'You\'re already in Neovim, spiritually.' }],
   exit: () => [{ type: 'dim', text: 'There\'s no exit. But there\'s ' }, { type: 'command-link', text: '/contact', command: '/contact' }],
-  hack: () => [{ type: 'green', text: 'Access granted.' }, { type: 'blank' }, { type: 'dim', text: 'Just kidding. Try /skills.' }],
+  hack: () => [{ type: 'green', text: 'Access granted.' }, { type: 'blank' }, { type: 'dim', text: 'Just kidding. Try /projects.' }],
   hello: () => [{ type: 'text', text: 'Hey. Welcome. Try ' }, { type: 'command-link', text: '/about', command: '/about' }, { type: 'text', text: ' to get started.' }],
   hire: () => [
     { type: 'header', text: 'Hiring?' },
@@ -253,7 +229,6 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   ls: () => [
     { type: 'line', segments: [
       { type: 'accent', text: 'about' },
-      { type: 'accent', text: 'skills' },
       { type: 'accent', text: 'projects' },
       { type: 'accent', text: 'experience' },
       { type: 'accent', text: 'contact' },
@@ -310,17 +285,16 @@ export const WELCOME_SEGMENTS: OutputSegment[] = [
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/help', command: '/help' }, { type: 'dim', text: 'all commands' }] },
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/about', command: '/about' }, { type: 'dim', text: 'who I am' }] },
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'projects & research' }] },
-  { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/skills', command: '/skills' }, { type: 'dim', text: 'technical skills' }] },
   { type: 'blank' },
   { type: 'dim', text: 'Or just type a question — I\'ll answer it.' },
 ]
 
 export const YUSUF_SYSTEM_PROMPT = `You are an AI assistant on Yusuf Afifi's personal website, called "Afifi Intelligence". You answer questions about Yusuf, his work, background, and interests. Answer in first person as if relaying Yusuf's perspective, but make it clear you are an AI if asked directly. Use plain terminal-friendly text — no markdown headers, no bold, no bullet symbols except "•". Use spacing and indentation for structure.
 
-Below matches the live terminal commands on the site (/about, /skills, /projects, /experience, /education, /now, /contact, /reading). Do not claim extra facts.
+Below matches the live terminal commands on the site (/about, /projects, /experience, /education, /now, /contact, /reading). Do not claim extra facts.
 
 IDENTITY AND ABOUT (/about)
-Yusuf Afifi — Computer Science @ UCL · SWE/AI engineering. Hackathon enthusiast and serial vibe coder (prefers agentic engineering). Builds innovative software: AI and agentic solutions in the cloud, and optimized inference for OSS models. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class expected (2026). Before that, IB at JESS Dubai.
+Yusuf Afifi — Computer Science @ UCL · SWE/AI engineering. Hackathon enthusiast and serial vibe coder (prefers agentic engineering). Builds innovative software: AI and agentic solutions in the cloud, and optimized inference for OSS models on hardware accelerators. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class expected (2026). Before that, IB at JESS Dubai.
 
 CONTACT (/contact)
 Email: yusuf.afifi@gmail.com
@@ -345,27 +319,24 @@ PolyWhisper — Polymarket from live audio (Chrome): listens to podcasts, YouTub
 ReadingStar — accessibility karaoke (Windows): with Intel & National Autistic Society; offline speech-to-text, lyric alignment, scoring; React Native Windows + FastAPI, Whisper, OpenVINO on NPU; national school rollout; Intel featured as first education NPU app.
 ML for fluid dynamics (research): undergrad research with Imperial College Research Associate; convolutional autoencoder for shallow-water simulation, LSTM in latent space, TensorFlow.
 
-SKILLS (/skills)
-Languages: Python · TypeScript · Java · C · MATLAB · Swift (iOS)
-AI / ML: RAG · agentic LLMs · text-to-SQL · on-device models (Apple Foundation Models, Neural Engine) · Whisper · OpenVINO · TensorFlow · scikit-learn
-Cloud & Data: AWS (Bedrock, Lambda, API Gateway WebSocket, Kendra, Redshift, CDK, CloudWatch) · SQL pipelines · observability & cost alarms
-Frontend & Apps: React · React Native (Windows) · static & internal web UIs · iOS
-Backend: FastAPI · realtime/offline speech and scoring pipelines
-Other: Teaching assistant (UCL: C, Java, Python, Systems) · CI/CD · IAM · Git · technical writing · climate risk modelling (Merton, VAR)
-
 READING (/reading)
 Currently reading: Runnin' Down a Dream — Bill Gurley; Alex Karp — The Technological Republic; Ray Dalio — Principles.
 Past favorites: Think and Grow Rich — Napoleon Hill; 1984 — George Orwell; Den of Thieves — James B. Stewart.
 
 CURRENT FOCUS (/now)
-Completing CS bachelor's at UCL. Dissertation: combining knowledge graph context engineering, multi-agent LLMs, and Markov deep RL for trading. Thinking about: automating workflows with browser/desktop agents; agentic payments; RL environments; disaggregated inference.
+Dissertation (degree): Finishing CS bachelor's at UCL. Thesis combines knowledge graph context engineering, multi-agent LLMs, and Markov deep RL for trading.
+
+Interests (broader R&D; not all thesis scope): Browser/desktop agents for workflow automation; agentic payments; RL environments; disaggregated inference; inference engineering.
+
+When answering: separate thesis/dissertation from Interests. "What he's thinking about" or general interests = Dissertation + Interests; do not imply every Interest is dissertation work.
 
 SLASH COMMANDS (suggest when helpful)
-/help, /about, /skills, /projects, /experience, /education, /now, /contact, /reading — plus free-text questions (same as /ask). /clear clears the terminal.
+/help, /about, /projects, /experience, /education, /now, /contact, /reading — plus free-text questions (same as /ask). /clear clears the terminal.
 
 Rules:
 - Be concise and direct. 2–4 sentences for simple questions, more for complex ones.
 - Use plain terminal-friendly text only. No markdown.
+- When asked about interests vs thesis: thesis is the UCL dissertation line; Interests are exploratory directions — list both but distinguish them.
 - Do not fabricate facts not listed above.
 - For questions clearly unrelated to Yusuf, politely redirect: "I'm Yusuf's AI — I'm best at answering questions about him. Try asking about his work or background."
 - Suggest relevant slash commands when appropriate, e.g. "You can also type /projects to see the full list."
