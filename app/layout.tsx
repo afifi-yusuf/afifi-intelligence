@@ -9,7 +9,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Yusuf Afifi — Berkeley MEng EECS · SWE/AI',
+  title: 'Yusuf Afifi — Computer Science @ UCL · SWE/AI',
   description: 'Personal terminal. Type a command or ask me anything.',
   generator: 'v0.app',
   icons: {
@@ -17,13 +17,13 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.jpg',
   },
   openGraph: {
-    title: 'Yusuf Afifi — Berkeley MEng EECS · SWE/AI',
+    title: 'Yusuf Afifi — Computer Science @ UCL · SWE/AI',
     description: 'Personal terminal. Type a command or ask me anything.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Yusuf Afifi — Berkeley MEng EECS · SWE/AI',
+    title: 'Yusuf Afifi — Computer Science @ UCL · SWE/AI',
     description: 'Personal terminal. Type a command or ask me anything.',
   },
 }
@@ -32,13 +32,13 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Yusuf Afifi',
-  jobTitle: 'MEng EECS student (Berkeley), SWE/AI',
+  jobTitle: 'Computer Science student (UCL), SWE/AI',
   url: 'https://yusufafifi.com',
   sameAs: [
     'https://github.com/afifi-yusuf',
     'https://linkedin.com/in/yusuf-afif1/',
   ],
-  description: 'Based in San Francisco. Berkeley MEng EECS, concentration visual computing, 2026–2027; SWE/AI. BSc UCL.',
+  description: 'BSc Computer Science at UCL; SWE/AI. Personal terminal — type a command or ask anything.',
 }
 
 export default function RootLayout({

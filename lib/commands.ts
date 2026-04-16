@@ -44,18 +44,14 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
 
   about: () => [
     { type: 'green', text: 'Yusuf Afifi' },
-    { type: 'dim', text: 'MEng EECS @ Berkeley · visual computing · SWE/AI · based in SF' },
+    { type: 'dim', text: 'Computer Science @ UCL · SWE/AI engineering' },
     { type: 'blank' },
-    { type: 'text', text: 'Hackathon enthusiast and serial vibe coder (I prefer agentic engineering).' },
-    { type: 'text', text: 'I build innovative software — AI and agentic solutions in the cloud,' },
-    { type: 'text', text: 'and optimized inference for OSS models on hardware accelerators.' },
-    { type: 'blank' },
-    { type: 'text', text: 'UC Berkeley — Master of Engineering (MEng) in EECS (Electrical' },
-    { type: 'text', text: 'Engineering and Computer Science), concentration in visual computing,' },
-    { type: 'text', text: '2026–2027.' },
+    { type: 'text', text: 'Systems, infrastructure, and AI engineering — agentic solutions in' },
+    { type: 'text', text: 'the cloud, optimized inference on accelerators (I prefer agentic engineering).' },
+    { type: 'text', text: 'Interested in accelerated compute — GPU and ASIC kernels.' },
     { type: 'blank' },
     { type: 'text', text: 'UCL, London — BSc (Hons) Computer Science, minor in Applied' },
-    { type: 'text', text: 'Mathematics, First Class expected (2026). Before that, IB at JESS Dubai.' },
+    { type: 'text', text: 'Mathematics, First Class predicted. Before that, IB at JESS Dubai.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'for projects' }] },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to get in touch' }] },
@@ -158,14 +154,9 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   education: () => [
     { type: 'header', text: 'Education' },
     { type: 'blank' },
-    { type: 'green', text: 'University of California, Berkeley' },
-    { type: 'text', text: 'Master of Engineering (MEng) — EECS (Electrical Engineering and' },
-    { type: 'text', text: 'Computer Science), concentration in visual computing' },
-    { type: 'dim', text: '2026–2027 · based in San Francisco, CA' },
-    { type: 'blank' },
     { type: 'green', text: 'University College London (UCL)' },
     { type: 'text', text: 'BSc (Hons) Computer Science — minor in Applied Mathematics' },
-    { type: 'dim', text: 'Sep 2023 — Jun 2026 (expected) · London, UK · First Class (expected)' },
+    { type: 'dim', text: 'Sep 2023 — Jun 2026 · London, UK · First Class predicted' },
     { type: 'blank' },
     { type: 'text', text: 'Teaching Assistant: COMP0002 (C), COMP0004 (Java), ENGF0034 (Python),' },
     { type: 'text', text: 'COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.' },
@@ -178,10 +169,6 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   now: () => [
     { type: 'header', text: 'Right now' },
     { type: 'blank' },
-    { type: 'green', text: 'Berkeley MEng' },
-    { type: 'text', text: 'MEng in EECS — Electrical Engineering and Computer Science;' },
-    { type: 'text', text: 'concentration in visual computing, 2026–2027. Based in SF.' },
-    { type: 'blank' },
     { type: 'green', text: 'Dissertation' },
     { type: 'text', text: 'Finishing my CS bachelor\'s at UCL — knowledge graph context' },
     { type: 'text', text: 'engineering, multi-agent LLMs, and Markov deep RL for trading.' },
@@ -189,7 +176,8 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'green', text: 'Interests' },
     { type: 'dim', text: 'Broader R&D threads (not all in the thesis).' },
     { type: 'text', text: 'Browser/desktop agents for workflow automation; agentic payments;' },
-    { type: 'text', text: 'RL environments; disaggregated inference; inference engineering.' },
+    { type: 'text', text: 'accelerated compute and GPU/ASIC kernels; RL environments;' },
+    { type: 'text', text: 'disaggregated inference; inference engineering.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to reach me' }] },
   ],
@@ -203,7 +191,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'github.com/afifi-yusuf', href: 'https://github.com/afifi-yusuf' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'LinkedIn' }, { type: 'link', text: 'linkedin.com/in/yusuf-afif1', href: 'https://linkedin.com/in/yusuf-afif1/' }] },
     { type: 'blank' },
-    { type: 'dim', text: 'Based in San Francisco, CA' },
+    { type: 'dim', text: 'London, UK' },
   ],
 
   reading: () => [
@@ -290,7 +278,7 @@ export function runCommand(input: string): OutputSegment[] | null {
 
 export const WELCOME_SEGMENTS: OutputSegment[] = [
   { type: 'green', text: 'yusuf afifi' },
-  { type: 'dim', text: 'meng eecs @ berkeley · visual computing · swe/ai · sf' },
+  { type: 'dim', text: 'computer science @ ucl · swe/ai engineering' },
   { type: 'blank' },
   { type: 'text', text: 'Welcome. This is my personal site — it runs like a terminal.' },
   { type: 'text', text: 'Type a command or ask me anything.' },
@@ -309,7 +297,7 @@ export const YUSUF_SYSTEM_PROMPT = `You are an AI assistant on Yusuf Afifi's per
 Below matches the live terminal commands on the site (/about, /projects, /experience, /education, /now, /contact, /reading). Do not claim extra facts.
 
 IDENTITY AND ABOUT (/about)
-Yusuf Afifi — MEng EECS @ Berkeley · SWE/AI engineering. Concentration: visual computing. Based in San Francisco, CA (SF). Hackathon enthusiast and serial vibe coder (prefers agentic engineering). Builds innovative software: AI and agentic solutions in the cloud, and optimized inference for OSS models on hardware accelerators. UC Berkeley: Master of Engineering (MEng) in EECS (Electrical Engineering and Computer Science), concentration in visual computing, 2026–2027. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class expected (2026). Before that, IB at JESS Dubai.
+Yusuf Afifi — Computer Science @ UCL · SWE/AI engineering. Systems, infrastructure, and AI engineering — agentic solutions in the cloud, optimized inference on hardware accelerators (prefers agentic engineering). Interested in accelerated compute, including GPU and ASIC kernels. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class predicted. Before that, IB at JESS Dubai.
 
 CONTACT (/contact)
 Email: yusuf.afifi@gmail.com
@@ -317,11 +305,10 @@ Phone: +44 7717 399868
 Website: yusufafifi.com
 GitHub: github.com/afifi-yusuf
 LinkedIn: linkedin.com/in/yusuf-afif1/
-Location: Based in San Francisco, CA
+Location: London, UK (studying at UCL)
 
 EDUCATION (/education)
-University of California, Berkeley: Master of Engineering (MEng) — EECS (Electrical Engineering and Computer Science), concentration in visual computing. 2026–2027. Based in San Francisco, CA.
-University College London (UCL): BSc (Hons) Computer Science — minor in Applied Mathematics. Sep 2023 — Jun 2026 (expected) · London, UK · First Class (expected). Teaching Assistant: COMP0002 (C), COMP0004 (Java), ENGF0034 (Python), COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.
+University College London (UCL): BSc (Hons) Computer Science — minor in Applied Mathematics. Sep 2023 — Jun 2026 · London, UK · First Class predicted. Teaching Assistant: COMP0002 (C), COMP0004 (Java), ENGF0034 (Python), COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.
 JESS Dubai: International Baccalaureate Diploma Programme — 43/45. Aug 2021 — May 2023 · Dubai, UAE.
 
 EXPERIENCE (/experience)
@@ -341,13 +328,11 @@ Currently reading: Runnin' Down a Dream — Bill Gurley; Alex Karp — The Techn
 Past favorites: Think and Grow Rich — Napoleon Hill; 1984 — George Orwell; Den of Thieves — James B. Stewart.
 
 CURRENT FOCUS (/now)
-Graduate study: UC Berkeley MEng in EECS (Electrical Engineering and Computer Science), concentration in visual computing, 2026–2027. Based in San Francisco, CA.
-
 Dissertation (UCL bachelor's): Finishing CS bachelor's at UCL. Thesis combines knowledge graph context engineering, multi-agent LLMs, and Markov deep RL for trading.
 
-Interests (broader R&D; not all thesis scope): Browser/desktop agents for workflow automation; agentic payments; RL environments; disaggregated inference; inference engineering.
+Interests (broader R&D; not all thesis scope): Browser/desktop agents for workflow automation; agentic payments; accelerated compute and GPU/ASIC kernels; RL environments; disaggregated inference; inference engineering.
 
-When answering: Berkeley MEng is current graduate program (2026–2027), concentration visual computing. Based in San Francisco (SF). UCL dissertation is undergrad thesis. Separate thesis from Interests; do not imply every Interest is dissertation work. If asked where he is based: San Francisco, CA.
+When answering: Finishing bachelor's at UCL in London. UCL dissertation is the bachelor's thesis. Separate thesis from Interests; do not imply every Interest is dissertation work. If asked where he is based: London, UK (UCL).
 
 SLASH COMMANDS (suggest when helpful)
 /help, /about, /projects, /experience, /education, /now, /contact, /reading — plus free-text questions (same as /ask). /clear clears the terminal.
@@ -355,7 +340,7 @@ SLASH COMMANDS (suggest when helpful)
 Rules:
 - Be concise and direct. 2–4 sentences for simple questions, more for complex ones.
 - Use plain terminal-friendly text only. No markdown.
-- When asked about interests vs thesis: UCL dissertation is the bachelor's thesis; Interests are exploratory directions — list both but distinguish them. Current graduate program is Berkeley MEng EECS (2026–2027).
+- When asked about interests vs thesis: UCL dissertation is the bachelor's thesis; Interests are exploratory directions — list both but distinguish them.
 - Do not fabricate facts not listed above.
 - For questions clearly unrelated to Yusuf, politely redirect: "I'm Yusuf's AI — I'm best at answering questions about him. Try asking about his work or background."
 - Suggest relevant slash commands when appropriate, e.g. "You can also type /projects to see the full list."
