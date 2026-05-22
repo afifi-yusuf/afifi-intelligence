@@ -7,6 +7,20 @@ export const maxDuration = 30
 const DEFAULT_MODEL = 'openai/gpt-oss-20b'
 const MAX_QUESTION_CHARS = 2000
 
+const ALLOWED_ORIGINS = new Set([
+  'https://yusufafifi.com',
+  'https://www.yusufafifi.com',
+])
+
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false
+  if (ALLOWED_ORIGINS.has(origin)) return true
+  if (origin.startsWith('http://localhost:')) return true
+  if (origin.startsWith('http://127.0.0.1:')) return true
+  if (origin.endsWith('.vercel.app')) return true
+  return false
+}
+
 function jsonError(code: string, message: string, status: number) {
   return new Response(JSON.stringify({ error: message, code }), {
     status,
@@ -15,6 +29,14 @@ function jsonError(code: string, message: string, status: number) {
 }
 
 export async function POST(req: Request) {
+  if (!isAllowedOrigin(req.headers.get('origin'))) {
+    return jsonError(
+      'FORBIDDEN_ORIGIN',
+      'This endpoint is only callable from yusufafifi.com.',
+      403
+    )
+  }
+
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey?.trim()) {
     console.error('[ask route] Missing GROQ_API_KEY')
