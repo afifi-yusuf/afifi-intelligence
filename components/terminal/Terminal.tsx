@@ -6,6 +6,7 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  memo,
   KeyboardEvent,
 } from 'react'
 import {
@@ -16,10 +17,13 @@ import {
   OutputSegment,
 } from '@/lib/commands'
 import OutputRenderer from './OutputRenderer'
-import TerminalHeader from './TerminalHeader'
+import TerminalHeader, { TerminalStatus } from './TerminalHeader'
 
 const MAX_QUESTIONS = 20
+const MAX_QUESTION_CHARS = 2000
 const MOBILE_CHIPS = ['/help', '/about', '/projects', '/contact', '/experience']
+const SUGGESTION_LIST_ID = 'terminal-suggestions'
+const suggestionOptionId = (i: number) => `${SUGGESTION_LIST_ID}-opt-${i}`
 
 function generateId() {
   return Math.random().toString(36).slice(2)
@@ -117,8 +121,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
 
   const handleCommandClick = useCallback((cmd: string) => {
     setInput('')
-    executeInput(cmd)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    executeInputRef.current(cmd)
   }, [])
 
   const executeInput = useCallback(
@@ -182,6 +185,19 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         return
       }
 
+      if (question.length > MAX_QUESTION_CHARS) {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
+        pushOutput([
+          {
+            type: 'error',
+            text: `Question too long (max ${MAX_QUESTION_CHARS} characters). Trim it down and try again.`,
+          },
+        ])
+        return
+      }
+
       if (streamingLockRef.current) {
         return
       }
@@ -209,7 +225,18 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         })
 
         if (!res.ok) {
-          throw new Error('API error')
+          let serverMsg: string | null = null
+          try {
+            const data = (await res.json()) as { error?: string }
+            if (typeof data?.error === 'string') serverMsg = data.error
+          } catch {
+            /* not JSON */
+          }
+          const err = new Error(serverMsg ?? 'API error') as Error & {
+            status?: number
+          }
+          err.status = res.status
+          throw err
         }
 
         // Remove thinking block, add streaming block
@@ -280,12 +307,11 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           return prev.filter(b => b.id !== thinkingId && b.id !== streamId)
         })
         if (!aborted) {
-          pushOutput([
-            {
-              type: 'error',
-              text: "Couldn't reach the AI right now. Try a /command instead, or come back later.",
-            },
-          ])
+          const message =
+            err instanceof Error && err.message && err.message !== 'API error'
+              ? err.message
+              : "Couldn't reach the AI right now. Try a /command instead, or come back later."
+          pushOutput([{ type: 'error', text: message }])
         }
       } finally {
         streamingLockRef.current = false
@@ -422,63 +448,36 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
     ]
   )
 
+  const status: TerminalStatus = isStreaming ? 'streaming' : 'ready'
+  const activeOptionId =
+    suggestions.length > 0 && suggestionIndex >= 0
+      ? suggestionOptionId(suggestionIndex)
+      : undefined
+
   return (
     <div
       className="terminal-text flex flex-col h-dvh min-h-0 bg-terminal-bg overflow-hidden terminal-selection pt-[env(safe-area-inset-top)]"
       onClick={focusInput}
     >
-      <TerminalHeader />
+      <TerminalHeader status={status} />
 
       {/* Terminal body */}
       <main
         ref={outputRef}
         className="flex-1 min-h-0 overflow-y-auto px-3 py-2 sm:px-4 sm:py-3 scroll-smooth terminal-scrollbar"
         aria-live="polite"
+        aria-relevant="additions"
+        aria-busy={isStreaming}
         aria-label="Terminal output"
       >
         <div className="w-full max-w-none space-y-1.5 sm:space-y-2">
-          {blocks.map(block => {
-            if (block.kind === 'user') {
-              return (
-                <div key={block.id} className="flex items-start gap-2">
-                  <span className="text-terminal-accent font-mono text-[13px] sm:text-[14px] shrink-0 mt-0.5">{'>'}</span>
-                  <span className="font-mono text-[13px] sm:text-[14px] text-terminal-fg break-words min-w-0">{block.text}</span>
-                </div>
-              )
-            }
-            if (block.kind === 'output') {
-              return (
-                <div key={block.id} className="pl-1 sm:pl-2 border-l-2 border-transparent">
-                  <OutputRenderer
-                    segments={block.segments}
-                    onCommandClick={handleCommandClick}
-                  />
-                </div>
-              )
-            }
-            if (block.kind === 'thinking') {
-              return (
-                <div key={block.id} className="pl-1 sm:pl-2">
-                  <ThinkingIndicator />
-                </div>
-              )
-            }
-            if (block.kind === 'streaming') {
-              return (
-                <div key={block.id} className="pl-1 sm:pl-2">
-                  <StreamingText text={block.text} done={block.done} />
-                </div>
-              )
-            }
-            if (block.kind === 'system') {
-              return (
-                <div key={block.id} className="pl-1 sm:pl-2">
-                  <span className="font-mono text-[12px] sm:text-[13px] text-terminal-dim italic">{block.text}</span>
-                </div>
-              )
-            }
-            return null
-          })}
+          {blocks.map(block => (
+            <BlockItem
+              key={block.id}
+              block={block}
+              onCommandClick={handleCommandClick}
+            />
+          ))}
         </div>
         {/* Bottom padding so last output isn't flush with input */}
         <div className="h-2" />
@@ -514,8 +513,11 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
       >
         {/* Autocomplete — Tab / ↑↓ / click; ghost hint in input row */}
         {suggestions.length > 0 && (
-          <div
-            className="px-3 sm:px-4 py-1.5 flex gap-2 sm:gap-3 flex-wrap border-b max-h-[8.5rem] overflow-y-auto terminal-scrollbar"
+          <ul
+            id={SUGGESTION_LIST_ID}
+            role="listbox"
+            aria-label="Slash command suggestions"
+            className="px-3 sm:px-4 py-1.5 flex gap-2 sm:gap-3 flex-wrap border-b max-h-[8.5rem] overflow-y-auto terminal-scrollbar list-none m-0"
             style={{ borderColor: 'var(--terminal-border)', background: 'var(--terminal-surface)' }}
           >
             {suggestions.map((s, i) => {
@@ -527,32 +529,33 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
                     : -1
               const isHi = i === highlighted
               return (
-              <span
-                key={s}
-                role="option"
-                aria-selected={isHi}
-                className={`font-mono text-[12px] transition-colors cursor-pointer ${
-                  isHi ? 'text-terminal-accent' : 'text-terminal-dim'
-                }`}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setInput('/' + s)
-                  setSuggestions([])
-                  inputRef.current?.focus()
-                }}
-              >
-                /{s}
-              </span>
+                <li
+                  key={s}
+                  id={suggestionOptionId(i)}
+                  role="option"
+                  aria-selected={isHi}
+                  className={`font-mono text-[12px] transition-colors cursor-pointer ${
+                    isHi ? 'text-terminal-accent' : 'text-terminal-dim'
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setInput('/' + s)
+                    setSuggestions([])
+                    inputRef.current?.focus()
+                  }}
+                >
+                  /{s}
+                </li>
               )
             })}
-          </div>
+          </ul>
         )}
 
         <div
           className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 bg-terminal-bg"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="font-mono text-[16px] sm:text-[14px] text-terminal-accent shrink-0">{'>'}</span>
+          <span className="font-mono text-[16px] sm:text-[14px] text-terminal-accent shrink-0" aria-hidden="true">{'>'}</span>
           <div className="relative flex-1 min-w-0 min-h-[1.35em] flex items-center">
             <input
               ref={inputRef}
@@ -566,9 +569,13 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck={false}
-              aria-label="Terminal input"
-              aria-autocomplete={suggestions.length > 0 ? 'list' : undefined}
+              role="combobox"
+              aria-label="Terminal input — type a command or ask a question"
+              aria-autocomplete="list"
               aria-expanded={suggestions.length > 0}
+              aria-controls={suggestions.length > 0 ? SUGGESTION_LIST_ID : undefined}
+              aria-activedescendant={activeOptionId}
+              maxLength={MAX_QUESTION_CHARS}
               placeholder={isStreaming ? '' : undefined}
               className={`absolute inset-0 w-full bg-transparent border-none outline-none font-mono text-[16px] sm:text-[14px] caret-terminal-accent placeholder:text-terminal-dim ${
                 ghostSuffix ? 'text-transparent' : 'text-terminal-fg'
@@ -602,19 +609,81 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
           paddingBottom: 'max(4px, env(safe-area-inset-bottom))',
         }}
       >
-        <span className="font-mono text-[10px] sm:text-[11px] text-terminal-dim truncate min-w-0">
+        <span
+          className="font-mono text-[11px] text-terminal-dim truncate min-w-0"
+          role="status"
+          aria-live="polite"
+        >
           {isStreaming ? 'streaming — esc to interrupt' : 'ready'}
         </span>
-        <div className="font-mono text-[9px] sm:text-[10px] text-terminal-dim text-left sm:text-right leading-snug sm:truncate sm:min-w-0 sm:max-w-[70%]">
+        <div className="font-mono text-[10px] sm:text-[11px] text-terminal-dim text-left sm:text-right leading-snug sm:truncate sm:min-w-0 sm:max-w-[70%]">
           {statusHint && <span className="opacity-90">type /help for commands · </span>}
           <span className="opacity-75">/model gpt-oss-20b</span>
-          <span className="opacity-50 mx-1">·</span>
+          <span className="opacity-50 mx-1" aria-hidden="true">·</span>
           <span className="opacity-75">/inference groq-lpu</span>
         </div>
       </footer>
     </div>
   )
 }
+
+const BlockItem = memo(function BlockItem({
+  block,
+  onCommandClick,
+}: {
+  block: OutputBlock
+  onCommandClick: (cmd: string) => void
+}) {
+  if (block.kind === 'user') {
+    return (
+      <div className="flex items-start gap-2">
+        <span
+          className="text-terminal-accent font-mono text-[13px] sm:text-[14px] shrink-0 mt-0.5"
+          aria-hidden="true"
+        >
+          {'>'}
+        </span>
+        <span className="font-mono text-[13px] sm:text-[14px] text-terminal-fg break-words min-w-0">
+          {block.text}
+        </span>
+      </div>
+    )
+  }
+  if (block.kind === 'output') {
+    return (
+      <div className="pl-1 sm:pl-2 border-l-2 border-transparent">
+        <OutputRenderer
+          segments={block.segments}
+          onCommandClick={onCommandClick}
+        />
+      </div>
+    )
+  }
+  if (block.kind === 'thinking') {
+    return (
+      <div className="pl-1 sm:pl-2">
+        <ThinkingIndicator />
+      </div>
+    )
+  }
+  if (block.kind === 'streaming') {
+    return (
+      <div className="pl-1 sm:pl-2">
+        <StreamingText text={block.text} done={block.done} />
+      </div>
+    )
+  }
+  if (block.kind === 'system') {
+    return (
+      <div className="pl-1 sm:pl-2">
+        <span className="font-mono text-[12px] sm:text-[13px] text-terminal-dim italic">
+          {block.text}
+        </span>
+      </div>
+    )
+  }
+  return null
+})
 
 function ThinkingIndicator() {
   const [dots, setDots] = useState('.')
@@ -634,9 +703,14 @@ function ThinkingIndicator() {
 function StreamingText({ text, done }: { text: string; done?: boolean }) {
   return (
     <div className="font-mono text-[13px] sm:text-[14px] text-terminal-fg leading-snug whitespace-pre-wrap break-words">
-      {text}
-      {!done && (
+      <span aria-hidden={!done}>{text}</span>
+      {done ? (
+        <span className="sr-only" aria-live="polite" aria-atomic="true">
+          {text}
+        </span>
+      ) : (
         <span
+          aria-hidden="true"
           className="inline-block w-[8px] h-[1em] bg-terminal-accent align-middle ml-0.5 animate-pulse"
           style={{ animationDuration: '1s' }}
         />

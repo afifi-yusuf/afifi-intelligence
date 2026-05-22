@@ -13,11 +13,11 @@ export type OutputSegment =
   | { type: 'line'; segments: OutputSegment[] }
 
 export type OutputBlock =
-  | { kind: 'user'; text: string }
+  | { kind: 'user'; text: string; id: string }
   | { kind: 'output'; segments: OutputSegment[]; id: string }
   | { kind: 'streaming'; text: string; id: string; done?: boolean }
   | { kind: 'thinking'; id: string }
-  | { kind: 'system'; text: string }
+  | { kind: 'system'; text: string; id: string }
 
 function seg(...args: OutputSegment[]): OutputSegment[] {
   return args
@@ -288,6 +288,7 @@ export const WELCOME_SEGMENTS: OutputSegment[] = [
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/help', command: '/help' }, { type: 'dim', text: 'all commands' }] },
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/about', command: '/about' }, { type: 'dim', text: 'who I am' }] },
   { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'projects & research' }] },
+  { type: 'line', segments: [{ type: 'text', text: '  ' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'get in touch' }] },
   { type: 'blank' },
   { type: 'dim', text: 'Or just type a question — I\'ll answer it.' },
 ]

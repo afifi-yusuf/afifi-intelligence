@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { OutputSegment } from '@/lib/commands'
 
 interface OutputRendererProps {
@@ -35,7 +36,7 @@ function RenderSegment({
           href={seg.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-terminal-link underline hover:text-terminal-green transition-colors cursor-pointer"
+          className="text-terminal-link underline hover:text-terminal-green transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-link focus-visible:ring-offset-1 focus-visible:ring-offset-terminal-bg rounded-sm"
         >
           {seg.text}
         </a>
@@ -43,8 +44,10 @@ function RenderSegment({
     case 'command-link':
       return (
         <button
+          type="button"
           onClick={() => onCommandClick?.(seg.command)}
-          className="text-terminal-accent underline hover:text-terminal-link transition-colors cursor-pointer bg-transparent border-none p-0 font-mono text-[13px] sm:text-[14px] leading-snug"
+          aria-label={`Run command ${seg.command}`}
+          className="text-terminal-accent underline hover:text-terminal-link transition-colors cursor-pointer bg-transparent border-none p-0 font-mono text-[13px] sm:text-[14px] leading-snug focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-accent focus-visible:ring-offset-1 focus-visible:ring-offset-terminal-bg rounded-sm"
         >
           {seg.text}
         </button>
@@ -55,13 +58,13 @@ function RenderSegment({
       return <span className="block h-[0.65em]" />
     case 'divider':
       return (
-        <span className="block text-terminal-dim">
+        <span className="block text-terminal-dim" aria-hidden="true">
           {'—'.repeat(40)}
         </span>
       )
     case 'error':
       return (
-        <span className="text-terminal-red">
+        <span role="alert" className="text-terminal-red">
           <span className="opacity-70">error: </span>
           {seg.text}
         </span>
@@ -81,16 +84,16 @@ function RenderSegment({
   }
 }
 
-export default function OutputRenderer({ segments, onCommandClick }: OutputRendererProps) {
+function OutputRenderer({ segments, onCommandClick }: OutputRendererProps) {
   return (
     <div className="font-mono text-[13px] sm:text-[14px] leading-snug">
       {segments.map((seg, i) => {
         if (seg.type === 'blank') {
-          return <div key={i} className="h-[0.75em]" />
+          return <div key={i} className="h-[0.75em]" aria-hidden="true" />
         }
         if (seg.type === 'divider') {
           return (
-            <div key={i} className="text-terminal-dim my-0.5">
+            <div key={i} className="text-terminal-dim my-0.5" aria-hidden="true">
               {'—'.repeat(40)}
             </div>
           )
@@ -104,3 +107,5 @@ export default function OutputRenderer({ segments, onCommandClick }: OutputRende
     </div>
   )
 }
+
+export default memo(OutputRenderer)

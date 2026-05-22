@@ -2,29 +2,40 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
+const SITE_URL = 'https://yusufafifi.com'
+const SITE_TITLE = 'Yusuf Afifi — CS · SWE/AI'
+const SITE_DESC = 'Personal terminal. Type a command or ask me anything.'
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: '#0a0a0a',
+  colorScheme: 'dark',
 }
 
 export const metadata: Metadata = {
-  title: 'Yusuf Afifi — CS · SWE/AI',
-  description: 'Personal terminal. Type a command or ask me anything.',
-  generator: 'v0.app',
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESC,
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: [{ url: '/app-icon.jpg', type: 'image/jpeg', sizes: '512x512' }],
     apple: '/apple-touch-icon.jpg',
   },
   openGraph: {
-    title: 'Yusuf Afifi — CS · SWE/AI',
-    description: 'Personal terminal. Type a command or ask me anything.',
+    title: SITE_TITLE,
+    description: SITE_DESC,
+    url: SITE_URL,
+    siteName: 'Afifi Intelligence',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Yusuf Afifi — CS · SWE/AI',
-    description: 'Personal terminal. Type a command or ask me anything.',
+    title: SITE_TITLE,
+    description: SITE_DESC,
   },
 }
 

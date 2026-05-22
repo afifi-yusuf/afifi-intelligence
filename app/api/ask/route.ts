@@ -4,27 +4,47 @@ import { YUSUF_SYSTEM_PROMPT } from '@/lib/commands'
 export const maxDuration = 30
 
 const DEFAULT_MODEL = 'openai/gpt-oss-20b'
+const MAX_QUESTION_CHARS = 2000
+
+function jsonError(code: string, message: string, status: number) {
+  return new Response(JSON.stringify({ error: message, code }), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
 
 export async function POST(req: Request) {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey?.trim()) {
     console.error('[ask route] Missing GROQ_API_KEY')
-    return new Response(JSON.stringify({ error: 'GROQ_API_KEY is not configured.' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return jsonError('SERVER_MISCONFIG', 'GROQ_API_KEY is not configured.', 500)
+  }
+
+  let payload: unknown
+  try {
+    payload = await req.json()
+  } catch {
+    return jsonError('BAD_JSON', 'Invalid JSON body.', 400)
+  }
+
+  const question =
+    typeof (payload as { question?: unknown })?.question === 'string'
+      ? (payload as { question: string }).question.trim()
+      : ''
+
+  if (!question) {
+    return jsonError('EMPTY_QUESTION', 'Question is required.', 400)
+  }
+
+  if (question.length > MAX_QUESTION_CHARS) {
+    return jsonError(
+      'QUESTION_TOO_LONG',
+      `Question too long (max ${MAX_QUESTION_CHARS} characters).`,
+      413
+    )
   }
 
   try {
-    const { question } = await req.json()
-
-    if (!question || typeof question !== 'string' || question.trim().length === 0) {
-      return new Response(JSON.stringify({ error: 'Question is required.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
-
     const groq = new Groq({ apiKey })
     const model = process.env.GROQ_MODEL?.trim() || DEFAULT_MODEL
 
@@ -33,10 +53,10 @@ export async function POST(req: Request) {
         model,
         messages: [
           { role: 'system', content: YUSUF_SYSTEM_PROMPT },
-          { role: 'user', content: question.trim() },
+          { role: 'user', content: question },
         ],
-        max_tokens: 500,
-        temperature: 0.7,
+        max_tokens: 800,
+        temperature: 0.5,
         stream: true,
       },
       { signal: req.signal }
@@ -70,15 +90,15 @@ export async function POST(req: Request) {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-store',
+        'X-Content-Type-Options': 'nosniff',
       },
     })
   } catch (error) {
     console.error('[ask route] Error:', error)
-    return new Response(
-      JSON.stringify({
-        error: "Couldn't reach the AI right now. Try a /command instead, or come back later.",
-      }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    return jsonError(
+      'UPSTREAM_ERROR',
+      "Couldn't reach the AI right now. Try a /command instead, or come back later.",
+      502
     )
   }
 }
