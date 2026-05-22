@@ -43,6 +43,12 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'line', segments: [{ type: 'accent', text: '/ask <question>' }, { type: 'dim', text: 'ask anything — AI powered' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/clear' }, { type: 'dim', text: 'clear terminal' }] },
     { type: 'blank' },
+    { type: 'header', text: 'AI modes' },
+    { type: 'blank' },
+    { type: 'line', segments: [{ type: 'accent', text: '/skills' }, { type: 'dim', text: 'list AI personas' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '/use <id>' }, { type: 'dim', text: 'activate sticky persona' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '/with <id> <q>' }, { type: 'dim', text: 'one-shot persona on a single question' }] },
+    { type: 'blank' },
     { type: 'header', text: 'Lab' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '/gpu' }, { type: 'dim', text: 'nvidia-smi snapshot' }] },
@@ -256,11 +262,14 @@ export const COMMAND_NAMES = Object.keys(COMMANDS).filter(
   k => !['sudo','rm','vim','exit','hack','hello','hire','coffee','secret','whoami','ls','pwd'].includes(k)
 )
 
-/** Tab completion — includes slash forms handled outside `COMMANDS` (e.g. /ask → LLM, /clear in Terminal, plus live commands). */
+/** Tab completion — includes slash forms handled outside `COMMANDS` (e.g. /ask → LLM, /clear in Terminal, plus live commands and AI modes). */
 export const COMPLETION_COMMAND_NAMES = [
   ...COMMAND_NAMES,
   'ask',
   'clear',
+  'skills',
+  'use',
+  'with',
   ...LIVE_COMMANDS,
 ].sort((a, b) => a.localeCompare(b))
 
@@ -280,6 +289,9 @@ export function runCommand(input: string): OutputSegment[] | null {
 
   // /clear is handled by the terminal component
   if (cmd === 'clear') return null
+
+  // AI mode commands are intercepted by Terminal.tsx (they need state access).
+  if (cmd === 'skills' || cmd === 'use' || cmd === 'with') return null
 
   // Live commands (e.g. /nvtop, /rollout, /gpu) are intercepted by Terminal.tsx
   // and rendered as custom block kinds — return null here so they don't fall

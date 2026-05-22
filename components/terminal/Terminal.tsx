@@ -17,6 +17,7 @@ import {
   OutputBlock,
   OutputSegment,
 } from '@/lib/commands'
+import { SKILLS, DEFAULT_SKILL_ID, findSkill } from '@/lib/skills'
 import OutputRenderer from './OutputRenderer'
 import TerminalHeader, { TerminalStatus } from './TerminalHeader'
 import GpuBlock from './GpuBlock'
@@ -28,6 +29,33 @@ const MAX_QUESTION_CHARS = 2000
 const MOBILE_CHIPS = ['/help', '/about', '/projects', '/contact', '/experience']
 const SUGGESTION_LIST_ID = 'terminal-suggestions'
 const suggestionOptionId = (i: number) => `${SUGGESTION_LIST_ID}-opt-${i}`
+
+function renderSkillsList(activeSkillId: string | null): OutputSegment[] {
+  const active = activeSkillId ?? DEFAULT_SKILL_ID
+  return [
+    { type: 'header', text: 'AI personas' },
+    { type: 'blank' },
+    ...SKILLS.map<OutputSegment>(s => {
+      const isActive = s.id === active
+      const segments: OutputSegment[] = isActive
+        ? [
+            { type: 'green', text: `/use ${s.id}` },
+            { type: 'dim', text: s.description },
+            { type: 'green', text: '(active)' },
+          ]
+        : [
+            { type: 'command-link', text: `/use ${s.id}`, command: `/use ${s.id}` },
+            { type: 'dim', text: s.description },
+          ]
+      return { type: 'line', segments }
+    }),
+    { type: 'blank' },
+    {
+      type: 'dim',
+      text: '/use <id> sticky · /with <id> <q> one-shot · /use off to clear',
+    },
+  ]
+}
 
 function generateId() {
   return Math.random().toString(36).slice(2)
@@ -50,6 +78,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [suggestionIndex, setSuggestionIndex] = useState(-1)
   const [statusHint, setStatusHint] = useState(true)
+  const [activeSkillId, setActiveSkillId] = useState<string | null>(null)
 
   const inputRef = useRef<HTMLInputElement>(null)
   const outputRef = useRef<HTMLDivElement>(null)
@@ -159,6 +188,63 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         return
       }
 
+      // /skills — list AI personas (needs activeSkillId state)
+      if (trimmed === '/skills' || trimmed === '/skills ') {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
+        pushOutput(renderSkillsList(activeSkillId))
+        return
+      }
+
+      // /use [id|off] — activate or clear sticky persona
+      if (trimmed === '/use' || trimmed.startsWith('/use ')) {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
+        const arg = trimmed.slice(4).trim().toLowerCase()
+        if (!arg) {
+          const currentName = activeSkillId ?? DEFAULT_SKILL_ID
+          pushOutput([
+            { type: 'dim', text: `Active: ${currentName}` },
+            { type: 'blank' },
+            { type: 'text', text: 'Usage: /use <id>  ·  /use off' },
+            {
+              type: 'line',
+              segments: [
+                { type: 'accent', text: '→' },
+                { type: 'command-link', text: '/skills', command: '/skills' },
+                { type: 'dim', text: 'to list personas' },
+              ],
+            },
+          ])
+          return
+        }
+        if (arg === 'off' || arg === 'none' || arg === DEFAULT_SKILL_ID) {
+          setActiveSkillId(null)
+          pushOutput([
+            { type: 'green', text: 'Skill cleared — back to default (me).' },
+          ])
+          return
+        }
+        const skill = findSkill(arg)
+        if (!skill) {
+          pushOutput([
+            { type: 'error', text: `Unknown skill: ${arg}` },
+            { type: 'dim', text: 'Try /skills to see available personas.' },
+          ])
+          return
+        }
+        setActiveSkillId(skill.id)
+        pushOutput([
+          { type: 'green', text: `Skill activated · ${skill.name}` },
+          { type: 'dim', text: skill.description },
+          { type: 'blank' },
+          { type: 'dim', text: 'Ask anything to try it. /use off to clear.' },
+        ])
+        return
+      }
+
       // Slash command
       if (trimmed.startsWith('/') && !trimmed.startsWith('/ask ')) {
         const result = runCommand(trimmed)
@@ -172,12 +258,71 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         // /ask <question> — fall through to streaming
       }
 
-      // Free-text or /ask
-      const question = trimmed.startsWith('/ask ')
-        ? trimmed.slice(5).trim()
-        : trimmed.startsWith('/ask')
-        ? ''
-        : trimmed
+      // Free-text · /ask · /with <id> <q>
+      let question: string
+      let oneShotSkillId: string | null = null
+
+      if (trimmed.startsWith('/with ')) {
+        const rest = trimmed.slice(6).trim()
+        const spaceIdx = rest.indexOf(' ')
+        if (spaceIdx < 0) {
+          pushUserInput(trimmed)
+          setHistory(h => [trimmed, ...h.slice(0, 99)])
+          setHistoryIndex(-1)
+          const possibleSkill = rest && findSkill(rest)
+          pushOutput([
+            {
+              type: 'error',
+              text: possibleSkill
+                ? `Usage: /with ${rest} <question>`
+                : 'Usage: /with <id> <question>',
+            },
+            ...(possibleSkill
+              ? []
+              : ([
+                  { type: 'dim', text: 'Try /skills to list ids.' },
+                ] as OutputSegment[])),
+          ])
+          return
+        }
+        const id = rest.slice(0, spaceIdx).toLowerCase()
+        const q = rest.slice(spaceIdx + 1).trim()
+        const skill = findSkill(id)
+        if (!skill) {
+          pushUserInput(trimmed)
+          setHistory(h => [trimmed, ...h.slice(0, 99)])
+          setHistoryIndex(-1)
+          pushOutput([
+            { type: 'error', text: `Unknown skill: ${id}` },
+            { type: 'dim', text: 'Try /skills to see available personas.' },
+          ])
+          return
+        }
+        if (!q) {
+          pushUserInput(trimmed)
+          setHistory(h => [trimmed, ...h.slice(0, 99)])
+          setHistoryIndex(-1)
+          pushOutput([{ type: 'error', text: `Usage: /with ${id} <question>` }])
+          return
+        }
+        oneShotSkillId = id
+        question = q
+      } else if (trimmed === '/with') {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
+        pushOutput([
+          { type: 'error', text: 'Usage: /with <id> <question>' },
+          { type: 'dim', text: 'Try /skills to list ids.' },
+        ])
+        return
+      } else if (trimmed.startsWith('/ask ')) {
+        question = trimmed.slice(5).trim()
+      } else if (trimmed === '/ask' || trimmed.startsWith('/ask')) {
+        question = ''
+      } else {
+        question = trimmed
+      }
 
       if (!question) {
         pushUserInput(trimmed)
@@ -232,12 +377,14 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
       const streamId = generateId()
       streamingIdRef.current = streamId
 
+      const skillId = oneShotSkillId ?? activeSkillId ?? undefined
+
       try {
         abortRef.current = new AbortController()
         const res = await fetch('/api/ask', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question }),
+          body: JSON.stringify({ question, skillId }),
           signal: abortRef.current.signal,
         })
 
@@ -337,7 +484,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         abortRef.current = null
       }
     },
-    [pushOutput, pushUserInput, questionCount, scrollToBottom]
+    [activeSkillId, pushOutput, pushUserInput, questionCount, scrollToBottom]
   )
 
   // Keep ref in sync so deep-link effect can call latest version
@@ -635,6 +782,12 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         </span>
         <div className="font-mono text-[10px] sm:text-[11px] text-terminal-dim text-left sm:text-right leading-snug sm:truncate sm:min-w-0 sm:max-w-[70%]">
           {statusHint && <span className="opacity-90">type /help for commands · </span>}
+          {activeSkillId && activeSkillId !== DEFAULT_SKILL_ID && (
+            <>
+              <span className="text-terminal-accent opacity-90">skill {activeSkillId}</span>
+              <span className="opacity-50 mx-1" aria-hidden="true">·</span>
+            </>
+          )}
           <span className="opacity-75">/model gpt-oss-20b</span>
           <span className="opacity-50 mx-1" aria-hidden="true">·</span>
           <span className="opacity-75">/inference groq-lpu</span>

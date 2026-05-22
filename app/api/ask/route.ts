@@ -1,5 +1,6 @@
 import Groq from 'groq-sdk'
 import { YUSUF_SYSTEM_PROMPT } from '@/lib/commands'
+import { findSkill } from '@/lib/skills'
 
 export const maxDuration = 30
 
@@ -27,9 +28,11 @@ export async function POST(req: Request) {
     return jsonError('BAD_JSON', 'Invalid JSON body.', 400)
   }
 
-  const question =
-    typeof (payload as { question?: unknown })?.question === 'string'
-      ? (payload as { question: string }).question.trim()
+  const body = payload as { question?: unknown; skillId?: unknown }
+  const question = typeof body?.question === 'string' ? body.question.trim() : ''
+  const requestedSkillId =
+    typeof body?.skillId === 'string' && body.skillId.length <= 32
+      ? body.skillId.trim()
       : ''
 
   if (!question) {
@@ -44,6 +47,11 @@ export async function POST(req: Request) {
     )
   }
 
+  const skill = requestedSkillId ? findSkill(requestedSkillId) : undefined
+  const systemPrompt = skill?.prompt
+    ? `${YUSUF_SYSTEM_PROMPT}\n\n${skill.prompt}`
+    : YUSUF_SYSTEM_PROMPT
+
   try {
     const groq = new Groq({ apiKey })
     const model = process.env.GROQ_MODEL?.trim() || DEFAULT_MODEL
@@ -52,7 +60,7 @@ export async function POST(req: Request) {
       {
         model,
         messages: [
-          { role: 'system', content: YUSUF_SYSTEM_PROMPT },
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: question },
         ],
         max_tokens: 800,
