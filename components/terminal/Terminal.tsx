@@ -13,11 +13,15 @@ import {
   runCommand,
   WELCOME_SEGMENTS,
   COMPLETION_COMMAND_NAMES,
+  LIVE_COMMANDS,
   OutputBlock,
   OutputSegment,
 } from '@/lib/commands'
 import OutputRenderer from './OutputRenderer'
 import TerminalHeader, { TerminalStatus } from './TerminalHeader'
+import GpuBlock from './GpuBlock'
+import NvtopBlock from './NvtopBlock'
+import RolloutBlock from './RolloutBlock'
 
 const MAX_QUESTIONS = 20
 const MAX_QUESTION_CHARS = 2000
@@ -139,6 +143,19 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         setHistory(h => [trimmed, ...h.slice(0, 99)])
         setHistoryIndex(-1)
         setBlocks([])
+        return
+      }
+
+      // Live commands — self-rendering block kinds (gpu, nvtop, rollout)
+      const liveName = trimmed.startsWith('/')
+        ? trimmed.slice(1).split(' ')[0].toLowerCase()
+        : ''
+      if ((LIVE_COMMANDS as readonly string[]).includes(liveName)) {
+        pushUserInput(trimmed)
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
+        const kind = liveName as 'gpu' | 'nvtop' | 'rollout'
+        setBlocks(prev => [...prev, { kind, id: generateId() }])
         return
       }
 
@@ -679,6 +696,27 @@ const BlockItem = memo(function BlockItem({
         <span className="font-mono text-[12px] sm:text-[13px] text-terminal-dim italic">
           {block.text}
         </span>
+      </div>
+    )
+  }
+  if (block.kind === 'gpu') {
+    return (
+      <div className="pl-1 sm:pl-2">
+        <GpuBlock />
+      </div>
+    )
+  }
+  if (block.kind === 'nvtop') {
+    return (
+      <div className="pl-1 sm:pl-2">
+        <NvtopBlock />
+      </div>
+    )
+  }
+  if (block.kind === 'rollout') {
+    return (
+      <div className="pl-1 sm:pl-2">
+        <RolloutBlock />
       </div>
     )
   }
