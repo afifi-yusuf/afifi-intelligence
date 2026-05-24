@@ -21,9 +21,10 @@ export type OutputBlock =
   | { kind: 'gpu'; id: string }
   | { kind: 'nvtop'; id: string }
   | { kind: 'rollout'; id: string }
+  | { kind: 'welcome'; id: string }
 
 /** Commands intercepted by Terminal.tsx (custom self-rendering block kinds). */
-export const LIVE_COMMANDS = ['gpu', 'nvtop', 'rollout'] as const
+export const LIVE_COMMANDS = ['gpu', 'nvtop', 'rollout', 'welcome'] as const
 
 function seg(...args: OutputSegment[]): OutputSegment[] {
   return args

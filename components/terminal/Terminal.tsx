@@ -11,7 +11,6 @@ import {
 } from 'react'
 import {
   runCommand,
-  WELCOME_SEGMENTS,
   COMPLETION_COMMAND_NAMES,
   LIVE_COMMANDS,
   OutputBlock,
@@ -23,6 +22,7 @@ import TerminalHeader, { TerminalStatus } from './TerminalHeader'
 import GpuBlock from './GpuBlock'
 import NvtopBlock from './NvtopBlock'
 import RolloutBlock from './RolloutBlock'
+import WelcomeBlock from './WelcomeBlock'
 
 const MAX_QUESTIONS = 20
 const MAX_QUESTION_CHARS = 2000
@@ -68,7 +68,7 @@ interface TerminalProps {
 
 export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
   const [blocks, setBlocks] = useState<OutputBlock[]>([
-    { kind: 'output', segments: WELCOME_SEGMENTS, id: 'welcome' },
+    { kind: 'welcome', id: 'welcome' },
   ])
   const [input, setInput] = useState('')
   const [history, setHistory] = useState<string[]>([])
@@ -183,7 +183,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         pushUserInput(trimmed)
         setHistory(h => [trimmed, ...h.slice(0, 99)])
         setHistoryIndex(-1)
-        const kind = liveName as 'gpu' | 'nvtop' | 'rollout'
+        const kind = liveName as 'gpu' | 'nvtop' | 'rollout' | 'welcome'
         setBlocks(prev => [...prev, { kind, id: generateId() }])
         return
       }
@@ -870,6 +870,13 @@ const BlockItem = memo(function BlockItem({
     return (
       <div className="pl-1 sm:pl-2">
         <RolloutBlock />
+      </div>
+    )
+  }
+  if (block.kind === 'welcome') {
+    return (
+      <div className="pl-1 sm:pl-2">
+        <WelcomeBlock onCommandClick={onCommandClick} />
       </div>
     )
   }
