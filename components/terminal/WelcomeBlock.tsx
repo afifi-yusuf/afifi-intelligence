@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode, useEffect, useRef, useState } from 'react'
+import AfifiAvatar from './AfifiAvatar'
 
 const CURRENT_LINES = [
   {
@@ -61,19 +62,7 @@ export default function WelcomeBlock({ onCommandClick }: Props) {
         <Panel title="afifi-intelligence v1.0.0">
           <div className="flex-1 flex items-center">
             <div className="flex items-center gap-3 sm:gap-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/yusuf-chibi-icon.jpg"
-                alt=""
-                width={72}
-                height={72}
-                className="rounded shrink-0"
-                style={{
-                  width: 72,
-                  height: 72,
-                  border: '1px solid var(--terminal-border)',
-                }}
-              />
+              <AfifiAvatar size={72} className="shrink-0" />
               <div className="text-[12px] sm:text-[13px] leading-relaxed min-w-0">
                 <div className="text-terminal-green truncate">yusuf afifi</div>
                 <div className="text-terminal-dim truncate">cs · swe/ai engineering</div>
