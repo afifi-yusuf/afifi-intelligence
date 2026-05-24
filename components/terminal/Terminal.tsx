@@ -11,11 +11,13 @@ import {
 } from 'react'
 import {
   runCommand,
+  runDownloadCommand,
   COMPLETION_COMMAND_NAMES,
   LIVE_COMMANDS,
   OutputBlock,
   OutputSegment,
 } from '@/lib/commands'
+import { triggerResumeDownload } from '@/lib/resume'
 import { SKILLS, DEFAULT_SKILL_ID, findSkill } from '@/lib/skills'
 import OutputRenderer from './OutputRenderer'
 import TerminalHeader, { TerminalStatus } from './TerminalHeader'
@@ -255,6 +257,21 @@ export default function Terminal({ initialCmd, initialQ, onReplayBoot }: Termina
           { type: 'dim', text: 'Ask anything to try it. /use off to clear.' },
         ])
         return
+      }
+
+      // /download resume — trigger PDF download
+      if (trimmed.toLowerCase().startsWith('/download')) {
+        const result = runDownloadCommand(trimmed)
+        if (result !== null) {
+          pushUserInput(trimmed)
+          setHistory(h => [trimmed, ...h.slice(0, 99)])
+          setHistoryIndex(-1)
+          if (trimmed.toLowerCase().startsWith('/download resume')) {
+            triggerResumeDownload()
+          }
+          pushOutput(result)
+          return
+        }
       }
 
       // Slash command

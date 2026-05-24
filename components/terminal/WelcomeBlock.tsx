@@ -28,6 +28,7 @@ const TRY: TryItem[] = [
   { label: '/about', command: '/about', hint: 'who I am' },
   { label: '/projects', command: '/projects', hint: 'selected work' },
   { label: '/contact', command: '/contact', hint: 'get in touch' },
+  { label: '/download resume', command: '/download resume', hint: 'pdf resume' },
   { label: '/ask <q>', command: '/ask', hint: 'ai-powered q&a' },
   { label: '/skills', command: '/skills', hint: 'switch ai persona' },
 ]

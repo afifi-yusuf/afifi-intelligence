@@ -34,6 +34,7 @@ function RenderSegment({
       return (
         <a
           href={seg.href}
+          download={seg.download}
           target="_blank"
           rel="noopener noreferrer"
           className="text-terminal-link underline hover:text-terminal-green transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-link focus-visible:ring-offset-1 focus-visible:ring-offset-terminal-bg rounded-sm"

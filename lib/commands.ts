@@ -1,10 +1,12 @@
+import { RESUME_PDF_DOWNLOAD, RESUME_PDF_HREF } from './resume'
+
 export type OutputSegment =
   | { type: 'header'; text: string }
   | { type: 'text'; text: string }
   | { type: 'dim'; text: string }
   | { type: 'accent'; text: string }
   | { type: 'green'; text: string }
-  | { type: 'link'; text: string; href: string }
+  | { type: 'link'; text: string; href: string; download?: string }
   | { type: 'command-link'; text: string; command: string }
   | { type: 'tag'; text: string }
   | { type: 'blank' }
@@ -40,6 +42,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'line', segments: [{ type: 'accent', text: '/education' }, { type: 'dim', text: 'academic background' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/now' }, { type: 'dim', text: 'what I\'m working on' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/contact' }, { type: 'dim', text: 'get in touch' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '/download resume' }, { type: 'dim', text: 'pdf resume' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/reading' }, { type: 'dim', text: 'books and papers' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/ask <question>' }, { type: 'dim', text: 'ask anything — AI powered' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/clear' }, { type: 'dim', text: 'clear terminal' }] },
@@ -211,6 +214,8 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'github.com/afifi-yusuf', href: 'https://github.com/afifi-yusuf' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'LinkedIn' }, { type: 'link', text: 'linkedin.com/in/yusuf-afif1', href: 'https://linkedin.com/in/yusuf-afif1/' }] },
     { type: 'blank' },
+    { type: 'line', segments: [{ type: 'accent', text: 'Resume' }, { type: 'command-link', text: '/download resume', command: '/download resume' }] },
+    { type: 'blank' },
     { type: 'dim', text: 'London, UK' },
   ],
 
@@ -241,6 +246,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'text', text: 'Especially if the problem is hard and the team is serious.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/download resume', command: '/download resume' }] },
   ],
   coffee: () => [{ type: 'dim', text: 'I take mine black. Let\'s talk: ' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }],
   secret: () => [
@@ -268,6 +274,7 @@ export const COMMAND_NAMES = Object.keys(COMMANDS).filter(
 export const COMPLETION_COMMAND_NAMES = [
   ...COMMAND_NAMES,
   'ask',
+  'download',
   'clear',
   'boot',
   'skills',
@@ -275,6 +282,37 @@ export const COMPLETION_COMMAND_NAMES = [
   'with',
   ...LIVE_COMMANDS,
 ].sort((a, b) => a.localeCompare(b))
+
+export function runDownloadCommand(input: string): OutputSegment[] | null {
+  const trimmed = input.trim()
+  if (!trimmed.toLowerCase().startsWith('/download')) return null
+
+  const arg = trimmed.slice('/download'.length).trim().toLowerCase()
+  if (arg === 'resume') {
+    return [
+      { type: 'green', text: 'Downloading resume…' },
+      { type: 'blank' },
+      {
+        type: 'line',
+        segments: [
+          { type: 'dim', text: 'If nothing started,' },
+          {
+            type: 'link',
+            text: RESUME_PDF_DOWNLOAD,
+            href: RESUME_PDF_HREF,
+            download: RESUME_PDF_DOWNLOAD,
+          },
+        ],
+      },
+    ]
+  }
+
+  return [
+    { type: 'error', text: 'Usage: /download resume' },
+    { type: 'blank' },
+    { type: 'dim', text: 'Only resume is available for now.' },
+  ]
+}
 
 export function runCommand(input: string): OutputSegment[] | null {
   const trimmed = input.trim()
@@ -303,6 +341,9 @@ export function runCommand(input: string): OutputSegment[] | null {
   // and rendered as custom block kinds — return null here so they don't fall
   // through to the "Unknown command" branch if interception is skipped.
   if ((LIVE_COMMANDS as readonly string[]).includes(cmd)) return null
+
+  // /download resume — handled in Terminal.tsx (triggers file download)
+  if (cmd === 'download') return null
 
   const handler = COMMANDS[cmd]
   if (handler) return handler()
@@ -374,7 +415,7 @@ Also (broader threads): Browser/desktop agents; agentic payments; RL environment
 When answering: Use first person. Based in London, UK (UCL). Separate current engineering/research focus from broader "Also" threads.
 
 SLASH COMMANDS (suggest when helpful)
-/help, /about, /projects, /experience, /education, /now, /contact, /reading — plus free-text questions (same as /ask). /clear clears the terminal.
+/help, /about, /projects, /experience, /education, /now, /contact, /download resume, /reading — plus free-text questions (same as /ask). /clear clears the terminal.
 
 Rules:
 - Be concise and direct. 2–4 sentences for simple questions, more for complex ones.
