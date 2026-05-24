@@ -212,6 +212,9 @@ const SSH_LINE_STAGGER_MS = 580
 const SSH_FIRST_LINE_DELAY_MS = 400
 const SSH_FINAL_PAUSE_MS = 1100
 
+/** How long the splash holds after the letters finish before auto-advancing. */
+const SPLASH_HOLD_MS = 1200
+
 /** Plays after Enter — fake SSH session, then handoff to main terminal */
 const SSH_SCRIPT: { className: string; text: string }[] = [
   { className: 'text-terminal-fg', text: '$ ssh yusuf@afifi.dev' },
@@ -367,6 +370,19 @@ export default function SSHBoot({ onComplete }: Props) {
     return () => window.removeEventListener('keydown', handleKey)
   }, [phase, finishSplash, skipSsh])
 
+  // Auto-advance the splash a beat after the letters finish, so visitors
+  // don't have to press Enter to start the SSH sequence. Enter/click still
+  // skip ahead immediately via finishSplash above.
+  useEffect(() => {
+    if (!waitingForEnter) return
+    if (phase !== 'splash') return
+    if (exitStartedRef.current || splashHandoffRef.current) return
+    const timer = setTimeout(() => {
+      finishSplash()
+    }, SPLASH_HOLD_MS)
+    return () => clearTimeout(timer)
+  }, [waitingForEnter, phase, finishSplash])
+
   const handleRootClick = useCallback(() => {
     if (exitStartedRef.current) return
     if (phase === 'splash') finishSplash()
@@ -427,9 +443,14 @@ export default function SSHBoot({ onComplete }: Props) {
               {waitingForEnter ? (
                 <>
                   <span>{'> '}</span>
-                  <span>Press </span>
-                  <strong>Enter</strong>
-                  <span> to connect</span>
+                  <span>Connecting</span>
+                  <span
+                    aria-hidden="true"
+                    className="inline-block ml-0.5"
+                    style={{ animation: 'cursor-blink 1.2s step-end infinite' }}
+                  >
+                    ...
+                  </span>
                   <span
                     className="inline-block w-2 h-[1em] align-middle ml-1"
                     style={{
@@ -437,6 +458,9 @@ export default function SSHBoot({ onComplete }: Props) {
                       animation: 'cursor-blink 1s step-end infinite',
                     }}
                   />
+                  <div className="text-[10px] sm:text-[11px] text-terminal-dim opacity-70 mt-1.5 not-italic">
+                    (press Enter or click to skip)
+                  </div>
                 </>
               ) : (
                 <span>Authenticating...</span>

@@ -2,18 +2,20 @@
 
 import { ReactNode, useEffect, useRef, useState } from 'react'
 
-interface RecentItem {
-  when: string
-  text: string
-  command?: string
-}
-
-const RECENT: RecentItem[] = [
-  { when: 'now', text: 'finishing dissertation — KG context + multi-agent LLMs + Markov RL', command: '/now' },
-  { when: '1w ago', text: 'shipped petals on the App Store', command: '/projects' },
-  { when: '3w ago', text: 'wrapped SDE intern at amazon prime video', command: '/experience' },
-  { when: '2mo ago', text: '2nd place · perplexity london hackathon (starplex)', command: '/projects' },
-]
+const CURRENT_LINES = [
+  {
+    label: 'engineering',
+    text: 'systems & ai — gpu kernels, inference, disaggregated serving on accelerators.',
+  },
+  {
+    label: 'research',
+    text: 'rl scaling, rlvr — agi-complete world models.',
+  },
+  {
+    label: 'also',
+    text: 'agentic systems, rl environments, browser/desktop agents.',
+  },
+] as const
 
 interface TryItem {
   label: string
@@ -82,34 +84,14 @@ export default function WelcomeBlock({ onCommandClick }: Props) {
           </div>
         </Panel>
 
-        <Panel title="Recent">
-          <ul className="text-[12px] sm:text-[13px] leading-snug space-y-1">
-            {RECENT.map((r, i) => {
-              const inner = (
-                <span className="flex gap-3 min-w-0">
-                  <span className="text-terminal-dim shrink-0" style={{ width: '5em' }}>
-                    {r.when}
-                  </span>
-                  <span className="text-terminal-fg break-words min-w-0">{r.text}</span>
-                </span>
-              )
-              return (
-                <li key={i}>
-                  {r.command ? (
-                    <button
-                      type="button"
-                      onClick={() => onCommandClick(r.command!)}
-                      aria-label={`Run command ${r.command}`}
-                      className="text-left w-full hover:bg-terminal-surface/40 rounded px-1 -mx-1 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-accent focus-visible:ring-offset-1 focus-visible:ring-offset-terminal-bg"
-                    >
-                      {inner}
-                    </button>
-                  ) : (
-                    <div className="px-1 -mx-1">{inner}</div>
-                  )}
-                </li>
-              )
-            })}
+        <Panel title="Current">
+          <ul className="text-[12px] sm:text-[13px] leading-snug space-y-2.5">
+            {CURRENT_LINES.map(({ label, text }) => (
+              <li key={label}>
+                <div className="text-terminal-green">{label}</div>
+                <div className="text-terminal-fg break-words mt-0.5">{text}</div>
+              </li>
+            ))}
           </ul>
           <div className="mt-auto pt-2 text-[12px] sm:text-[13px] text-terminal-dim italic opacity-80 pl-1">
             ...{' '}

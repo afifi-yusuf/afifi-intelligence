@@ -55,6 +55,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'line', segments: [{ type: 'accent', text: '/gpu' }, { type: 'dim', text: 'nvidia-smi snapshot' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/nvtop' }, { type: 'dim', text: 'live GPU monitor' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/rollout' }, { type: 'dim', text: 'RL trading rollout · dissertation demo' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '/boot' }, { type: 'dim', text: 'replay the boot intro' }] },
     { type: 'blank' },
     { type: 'dim', text: 'Or just type a question — I\'ll answer it.' },
     { type: 'blank' },
@@ -186,17 +187,17 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   ],
 
   now: () => [
-    { type: 'header', text: 'Right now' },
+    { type: 'header', text: 'Current' },
     { type: 'blank' },
-    { type: 'green', text: 'Dissertation' },
-    { type: 'text', text: 'Finishing my CS bachelor\'s at UCL — knowledge graph context' },
-    { type: 'text', text: 'engineering, multi-agent LLMs, and Markov deep RL for trading.' },
+    { type: 'green', text: 'Systems / AI engineering' },
+    { type: 'text', text: 'GPU kernels, inference engineering, disaggregated inference.' },
     { type: 'blank' },
-    { type: 'green', text: 'Interests' },
-    { type: 'dim', text: 'Broader R&D threads (not all in the thesis).' },
-    { type: 'text', text: 'Browser/desktop agents for workflow automation; agentic payments;' },
-    { type: 'text', text: 'accelerated compute and GPU/ASIC kernels; RL environments;' },
-    { type: 'text', text: 'disaggregated inference; inference engineering.' },
+    { type: 'green', text: 'Research' },
+    { type: 'text', text: 'RL scaling, RLVR — AGI-complete world models.' },
+    { type: 'blank' },
+    { type: 'green', text: 'Also' },
+    { type: 'dim', text: 'Broader threads beyond the above.' },
+    { type: 'text', text: 'Browser/desktop agents; agentic payments; RL environments.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to reach me' }] },
   ],
@@ -268,6 +269,7 @@ export const COMPLETION_COMMAND_NAMES = [
   ...COMMAND_NAMES,
   'ask',
   'clear',
+  'boot',
   'skills',
   'use',
   'with',
@@ -290,6 +292,9 @@ export function runCommand(input: string): OutputSegment[] | null {
 
   // /clear is handled by the terminal component
   if (cmd === 'clear') return null
+
+  // /boot is handled by the terminal component (calls onReplayBoot)
+  if (cmd === 'boot') return null
 
   // AI mode commands are intercepted by Terminal.tsx (they need state access).
   if (cmd === 'skills' || cmd === 'use' || cmd === 'with') return null
@@ -362,11 +367,11 @@ Currently reading: Runnin' Down a Dream — Bill Gurley; Alex Karp — The Techn
 Past favorites: Think and Grow Rich — Napoleon Hill; 1984 — George Orwell; Den of Thieves — James B. Stewart.
 
 CURRENT FOCUS (/now)
-Dissertation (UCL bachelor's): Finishing CS bachelor's at UCL. Thesis combines knowledge graph context engineering, multi-agent LLMs, and Markov deep RL for trading.
+Systems / AI engineering: GPU kernels, inference engineering, disaggregated inference.
+Research: RL scaling, RLVR — AGI-complete world models.
+Also (broader threads): Browser/desktop agents; agentic payments; RL environments.
 
-Interests (broader R&D; not all thesis scope): Browser/desktop agents for workflow automation; agentic payments; accelerated compute and GPU/ASIC kernels; RL environments; disaggregated inference; inference engineering.
-
-When answering: Use first person. Finishing bachelor's at UCL in London. UCL dissertation is the bachelor's thesis. Separate thesis from Interests; do not imply every Interest is dissertation work. If asked where you are based: London, UK (UCL).
+When answering: Use first person. Based in London, UK (UCL). Separate current engineering/research focus from broader "Also" threads.
 
 SLASH COMMANDS (suggest when helpful)
 /help, /about, /projects, /experience, /education, /now, /contact, /reading — plus free-text questions (same as /ask). /clear clears the terminal.
@@ -374,7 +379,7 @@ SLASH COMMANDS (suggest when helpful)
 Rules:
 - Be concise and direct. 2–4 sentences for simple questions, more for complex ones.
 - Use plain terminal-friendly text only. No markdown.
-- When asked about interests vs thesis: UCL dissertation is the bachelor's thesis; Interests are exploratory directions — list both but distinguish them.
+- When asked about current focus vs broader threads: lead with systems/AI engineering and RL/RLVR research; "Also" items are exploratory — list both but distinguish them.
 - Do not fabricate facts not listed above.
 - For questions clearly unrelated to Yusuf, politely redirect: "I'm Yusuf's digital clone on this site — best for questions about me and my work. Try /projects or /about."
 - Suggest relevant slash commands when appropriate, e.g. "You can also type /projects to see the full list."

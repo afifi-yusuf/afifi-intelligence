@@ -25,13 +25,36 @@ export default function HomePage() {
     setBooted(true)
   }, [])
 
-  // Respect prefers-reduced-motion — skip boot animation
+  const handleReplayBoot = useCallback(() => {
+    setBooted(false)
+  }, [])
+
+  // Skip the boot intro for:
+  //   1. returning visitors (shared `afifi:visits` key with WelcomeBlock)
+  //   2. prefers-reduced-motion users
+  //   3. deep links into the terminal (?cmd=... or ?q=...)
   useEffect(() => {
+    try {
+      const visits =
+        parseInt(localStorage.getItem('afifi:visits') ?? '0', 10) || 0
+      if (visits > 0) {
+        setBooted(true)
+        return
+      }
+    } catch {
+      /* localStorage blocked — fall through */
+    }
+
+    if (searchParams.get('cmd') || searchParams.get('q')) {
+      setBooted(true)
+      return
+    }
+
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mq.matches) {
       setBooted(true)
     }
-  }, [])
+  }, [searchParams])
 
   const initialCmd = searchParams.get('cmd')
   const initialQ = searchParams.get('q')
@@ -48,6 +71,7 @@ export default function HomePage() {
           <Terminal
             initialCmd={initialCmd ? `/${initialCmd}` : undefined}
             initialQ={initialQ ?? undefined}
+            onReplayBoot={handleReplayBoot}
           />
         </div>
       )}

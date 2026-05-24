@@ -64,9 +64,11 @@ function generateId() {
 interface TerminalProps {
   initialCmd?: string
   initialQ?: string
+  /** Called when the user runs /boot to replay the boot intro. */
+  onReplayBoot?: () => void
 }
 
-export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
+export default function Terminal({ initialCmd, initialQ, onReplayBoot }: TerminalProps) {
   const [blocks, setBlocks] = useState<OutputBlock[]>([
     { kind: 'welcome', id: 'welcome' },
   ])
@@ -172,6 +174,16 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         setHistory(h => [trimmed, ...h.slice(0, 99)])
         setHistoryIndex(-1)
         setBlocks([])
+        return
+      }
+
+      // /boot — replay the boot intro (parent re-mounts SSHBoot overlay)
+      if (trimmed === '/boot' || trimmed === '/boot ') {
+        setHistory(h => [trimmed, ...h.slice(0, 99)])
+        setHistoryIndex(-1)
+        if (onReplayBoot) {
+          onReplayBoot()
+        }
         return
       }
 
@@ -484,7 +496,7 @@ export default function Terminal({ initialCmd, initialQ }: TerminalProps) {
         abortRef.current = null
       }
     },
-    [activeSkillId, pushOutput, pushUserInput, questionCount, scrollToBottom]
+    [activeSkillId, onReplayBoot, pushOutput, pushUserInput, questionCount, scrollToBottom]
   )
 
   // Keep ref in sync so deep-link effect can call latest version
