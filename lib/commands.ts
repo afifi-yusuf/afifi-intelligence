@@ -252,6 +252,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'header', text: 'Get in Touch' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'afifi@berkeley.edu', href: 'mailto:afifi@berkeley.edu' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'Phone' }, { type: 'link', text: '+44 7717 399868', href: 'tel:+447717399868' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'Site' }, { type: 'link', text: 'yusufafifi.com', href: 'https://yusufafifi.com' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'github.com/afifi-yusuf', href: 'https://github.com/afifi-yusuf' }] },
@@ -441,6 +442,7 @@ Yusuf Afifi — MEng EECS @ Berkeley · visual computing · SWE/AI · based in S
 
 CONTACT (/contact)
 Email: yusuf.afifi@gmail.com
+Email: afifi@berkeley.edu
 Phone: +44 7717 399868
 Website: yusufafifi.com
 GitHub: github.com/afifi-yusuf

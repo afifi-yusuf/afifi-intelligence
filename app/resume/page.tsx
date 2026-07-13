@@ -46,6 +46,8 @@ export default function ResumePage() {
           <ul className="mt-4 space-y-1">
             <ContactRow label="Email">
               <ExtLink href="mailto:yusuf.afifi@gmail.com">yusuf.afifi@gmail.com</ExtLink>
+              {' · '}
+              <ExtLink href="mailto:afifi@berkeley.edu">afifi@berkeley.edu</ExtLink>
             </ContactRow>
             <ContactRow label="Phone">
               <ExtLink href="tel:+447717399868">+44 7717 399868</ExtLink>
