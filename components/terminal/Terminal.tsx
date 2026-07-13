@@ -9,6 +9,7 @@ import {
   memo,
   KeyboardEvent,
 } from 'react'
+import { track } from '@vercel/analytics'
 import {
   runCommand,
   runDownloadCommand,
@@ -28,7 +29,7 @@ import WelcomeBlock from './WelcomeBlock'
 
 const MAX_QUESTIONS = 20
 const MAX_QUESTION_CHARS = 2000
-const MOBILE_CHIPS = ['/help', '/about', '/projects', '/contact', '/experience']
+const MOBILE_CHIPS = ['/about', '/projects', '/experience', '/contact', '/download resume']
 const SUGGESTION_LIST_ID = 'terminal-suggestions'
 const suggestionOptionId = (i: number) => `${SUGGESTION_LIST_ID}-opt-${i}`
 
@@ -165,6 +166,14 @@ export default function Terminal({ initialCmd, initialQ, onReplayBoot }: Termina
     async (rawInput: string) => {
       const trimmed = rawInput.trim()
       if (!trimmed) return
+
+      // Command names only — free-text question content is never tracked (privacy)
+      if (trimmed.startsWith('/')) {
+        const commandName = trimmed.slice(1).split(' ')[0].toLowerCase()
+        if (commandName) track('command', { command: commandName })
+      } else {
+        track('command', { command: 'free-text' })
+      }
 
       setStatusHint(false)
       setInput('')

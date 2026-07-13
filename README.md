@@ -5,7 +5,7 @@ Personal site for [yusufafifi.com](https://yusufafifi.com) — a single-page ter
 ```
 > /about
 yusuf afifi
-cs · swe/ai engineering
+meng eecs @ berkeley · visual computing · swe/ai · sf
 ...
 > what did you build at amazon?
 A text-to-SQL agent for SVOD accounting on AWS Bedrock — cut ad-hoc query time about 75% ...
@@ -58,6 +58,7 @@ app/
   opengraph-image.tsx terminal-styled OG card, prerendered statically
   error.tsx           terminal-styled render-error boundary
   not-found.tsx       terminal-styled 404
+  resume/page.tsx     conventional readable resume page (+ PDF download)
   api/ask/route.ts    POST { question, skillId } → text/plain stream
 
 components/terminal/
@@ -82,8 +83,10 @@ Static (data in [`lib/commands.ts`](lib/commands.ts)):
 
 ```
 /help /about /projects /experience /education /now
-/contact /reading /clear /ask <question>
+/contact /resume /reading /clear /ask <question>
 ```
+
+There is also a conventional, crawlable resume page at [`/resume`](app/resume/page.tsx) (same facts as the terminal commands, plus PDF download) for visitors who won't drive the terminal.
 
 Lab (custom self-rendering block kinds in `components/terminal/*Block.tsx`):
 

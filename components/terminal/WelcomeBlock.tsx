@@ -5,16 +5,16 @@ import AfifiAvatar from './AfifiAvatar'
 
 const CURRENT_LINES = [
   {
-    label: 'engineering',
-    text: 'systems & ai — gpu kernels, inference, disaggregated serving on accelerators.',
+    label: 'study',
+    text: 'berkeley meng eecs — visual computing, 2026–2027.',
   },
   {
     label: 'research',
-    text: 'rl scaling, rlvr — agi-complete world models.',
+    text: 'principle — rl post-training on prediction market environments.',
   },
   {
-    label: 'also',
-    text: 'agentic systems, rl environments, browser/desktop agents.',
+    label: 'building',
+    text: 'warply — open-source control plane for ai endpoints.',
   },
 ] as const
 
@@ -67,9 +67,9 @@ export default function WelcomeBlock({ onCommandClick }: Props) {
               <AfifiAvatar size={72} className="shrink-0" />
               <div className="text-[12px] sm:text-[13px] leading-relaxed min-w-0">
                 <div className="text-terminal-green truncate">yusuf afifi</div>
-                <div className="text-terminal-dim truncate">cs · swe/ai engineering</div>
+                <div className="text-terminal-dim truncate">meng eecs @ berkeley · visual computing</div>
                 <div className="text-terminal-dim mt-1.5 truncate">groq · gpt-oss-20b</div>
-                <div className="text-terminal-dim truncate">london · ucl</div>
+                <div className="text-terminal-dim truncate">san francisco · sf</div>
               </div>
             </div>
           </div>
@@ -163,6 +163,13 @@ export default function WelcomeBlock({ onCommandClick }: Props) {
         <span>
           {returning ? 'welcome back.' : 'welcome.'} type a command or just ask anything.
         </span>
+        <span className="opacity-60" aria-hidden="true">·</span>
+        <a
+          href="mailto:yusuf.afifi@gmail.com"
+          className="text-terminal-link underline hover:text-terminal-green transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-link focus-visible:ring-offset-1 focus-visible:ring-offset-terminal-bg rounded-sm"
+        >
+          yusuf.afifi@gmail.com
+        </a>
       </div>
     </div>
   )

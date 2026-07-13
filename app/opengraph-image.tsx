@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'Yusuf Afifi — CS · SWE/AI engineering'
+export const alt = 'Yusuf Afifi — Berkeley MEng EECS · visual computing · SWE/AI'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -72,7 +72,7 @@ export default function OpenGraphImage() {
               letterSpacing: '-0.01em',
             }}
           >
-            cs · swe/ai engineering
+            meng eecs @ berkeley · visual computing · swe/ai
           </div>
 
           <div

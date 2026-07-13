@@ -3,8 +3,8 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const SITE_URL = 'https://yusufafifi.com'
-const SITE_TITLE = 'Yusuf Afifi — CS · SWE/AI'
-const SITE_DESC = 'Personal terminal. Type a command or ask me anything.'
+const SITE_TITLE = 'Yusuf Afifi — Berkeley MEng EECS · SWE/AI'
+const SITE_DESC = 'MEng EECS @ Berkeley · visual computing. Research fellow at Principle; building Warply. Personal terminal — type a command or ask me anything.'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -43,13 +43,15 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Yusuf Afifi',
-  jobTitle: 'CS · SWE/AI',
+  jobTitle: 'MEng EECS student (Berkeley), SWE/AI',
   url: 'https://yusufafifi.com',
   sameAs: [
     'https://github.com/afifi-yusuf',
     'https://linkedin.com/in/yusuf-afif1/',
+    'https://warply.ai',
+    'https://futureprinciple.com',
   ],
-  description: 'BSc Computer Science at UCL; SWE/AI. Personal terminal — type a command or ask anything.',
+  description: 'Based in San Francisco. Berkeley MEng EECS, visual computing; research fellow at Principle; building Warply.',
 }
 
 export default function RootLayout({

@@ -42,6 +42,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'line', segments: [{ type: 'accent', text: '/education' }, { type: 'dim', text: 'academic background' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/now' }, { type: 'dim', text: 'what I\'m working on' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/contact' }, { type: 'dim', text: 'get in touch' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '/resume' }, { type: 'dim', text: 'resume — web + pdf' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/download resume' }, { type: 'dim', text: 'pdf resume' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/reading' }, { type: 'dim', text: 'books and papers' }] },
     { type: 'line', segments: [{ type: 'accent', text: '/ask <question>' }, { type: 'dim', text: 'ask anything — AI powered' }] },
@@ -67,14 +68,17 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
 
   about: () => [
     { type: 'green', text: 'Yusuf Afifi' },
-    { type: 'dim', text: 'CS · SWE/AI engineering' },
+    { type: 'dim', text: 'MEng EECS @ Berkeley · visual computing · SWE/AI · SF' },
     { type: 'blank' },
     { type: 'text', text: 'Systems, infrastructure, and AI engineering — agentic solutions in' },
     { type: 'text', text: 'the cloud, optimized inference on accelerators (I prefer agentic engineering).' },
     { type: 'text', text: 'Interested in accelerated compute — GPU and ASIC kernels.' },
     { type: 'blank' },
+    { type: 'text', text: 'UC Berkeley — Master of Engineering (MEng) in EECS, concentration' },
+    { type: 'text', text: 'in visual computing, 2026–2027.' },
+    { type: 'blank' },
     { type: 'text', text: 'UCL, London — BSc (Hons) Computer Science, minor in Applied' },
-    { type: 'text', text: 'Mathematics, First Class predicted. Before that, IB at JESS Dubai.' },
+    { type: 'text', text: 'Mathematics, First Class (2026). Before that, IB at JESS Dubai.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/projects', command: '/projects' }, { type: 'dim', text: 'for projects' }] },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to get in touch' }] },
@@ -82,6 +86,21 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
 
   projects: () => [
     { type: 'header', text: 'Projects & Research' },
+    { type: 'blank' },
+    { type: 'green', text: 'Warply — open-source control plane for AI endpoints' },
+    { type: 'text', text: 'Python SDK to launch, inspect, and optimize OpenAI-compatible' },
+    { type: 'text', text: 'model serving on GPUs — disaggregated prefill/decode pools, KV cache' },
+    { type: 'text', text: 'routing, portable DeploymentPlan across clouds and backends.' },
+    { type: 'line', segments: [{ type: 'tag', text: '[Python]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Inference]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[SGLang]' }] },
+    {
+      type: 'line',
+      segments: [
+        { type: 'accent', text: '→' },
+        { type: 'link', text: 'warply.ai', href: 'https://warply.ai' },
+        { type: 'dim', text: ' · ' },
+        { type: 'link', text: 'GitHub', href: 'https://github.com/warply-ai/warply' },
+      ],
+    },
     { type: 'blank' },
     { type: 'green', text: 'Petals — AI health & wellness (iOS)' },
     { type: 'text', text: 'iOS app using Apple Foundation Models on-device with a RAG layer on' },
@@ -158,6 +177,19 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   experience: () => [
     { type: 'header', text: 'Work Experience' },
     { type: 'blank' },
+    { type: 'green', text: 'Research Fellow' },
+    { type: 'dim', text: 'Principle · 2026 — present · San Francisco' },
+    { type: 'text', text: 'RL post-training on prediction market environments —' },
+    { type: 'text', text: 'adversarial multi-actor simulation for strategic decision-making.' },
+    { type: 'line', segments: [{ type: 'tag', text: '[RL]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Post-training]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Prediction markets]' }] },
+    {
+      type: 'line',
+      segments: [
+        { type: 'accent', text: '→' },
+        { type: 'link', text: 'futureprinciple.com', href: 'https://futureprinciple.com' },
+      ],
+    },
+    { type: 'blank' },
     { type: 'green', text: 'Software Development Engineer Intern — Gen AI' },
     { type: 'dim', text: 'Amazon Prime Video · Jun — Sep 2025 · London' },
     { type: 'text', text: 'Text-to-SQL agent for SVOD accounting: RAG on AWS Bedrock (Claude),' },
@@ -177,9 +209,13 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   education: () => [
     { type: 'header', text: 'Education' },
     { type: 'blank' },
+    { type: 'green', text: 'University of California, Berkeley' },
+    { type: 'text', text: 'Master of Engineering (MEng) — EECS, concentration in visual computing' },
+    { type: 'dim', text: '2026–2027 · San Francisco, CA' },
+    { type: 'blank' },
     { type: 'green', text: 'University College London (UCL)' },
     { type: 'text', text: 'BSc (Hons) Computer Science — minor in Applied Mathematics' },
-    { type: 'dim', text: 'Sep 2023 — Jun 2026 · London, UK · First Class predicted' },
+    { type: 'dim', text: 'Sep 2023 — Jun 2026 · London, UK · First Class' },
     { type: 'blank' },
     { type: 'text', text: 'Teaching Assistant: COMP0002 (C), COMP0004 (Java), ENGF0034 (Python),' },
     { type: 'text', text: 'COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.' },
@@ -192,15 +228,22 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   now: () => [
     { type: 'header', text: 'Current' },
     { type: 'blank' },
-    { type: 'green', text: 'Systems / AI engineering' },
-    { type: 'text', text: 'GPU kernels, inference engineering, disaggregated inference.' },
+    { type: 'green', text: 'Berkeley MEng' },
+    { type: 'text', text: 'MEng in EECS — concentration in visual computing, 2026–2027.' },
+    { type: 'text', text: 'Based in San Francisco.' },
     { type: 'blank' },
-    { type: 'green', text: 'Research' },
-    { type: 'text', text: 'RL scaling, RLVR — AGI-complete world models.' },
+    { type: 'green', text: 'Principle' },
+    { type: 'text', text: 'Research fellow — RL post-training on prediction market' },
+    { type: 'text', text: 'environments for adversarial strategic simulation.' },
+    { type: 'blank' },
+    { type: 'green', text: 'Warply' },
+    { type: 'text', text: 'Building open-source control plane for AI endpoints — launch,' },
+    { type: 'text', text: 'observe, optimize OpenAI-compatible serving on GPUs.' },
     { type: 'blank' },
     { type: 'green', text: 'Also' },
     { type: 'dim', text: 'Broader threads beyond the above.' },
-    { type: 'text', text: 'Browser/desktop agents; agentic payments; RL environments.' },
+    { type: 'text', text: 'GPU kernels; disaggregated inference; RL environments;' },
+    { type: 'text', text: 'browser/desktop agents; agentic payments.' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/contact', command: '/contact' }, { type: 'dim', text: 'to reach me' }] },
   ],
@@ -216,7 +259,24 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: 'Resume' }, { type: 'command-link', text: '/download resume', command: '/download resume' }] },
     { type: 'blank' },
-    { type: 'dim', text: 'London, UK' },
+    { type: 'dim', text: 'San Francisco, CA' },
+  ],
+
+  resume: () => [
+    { type: 'header', text: 'Resume' },
+    { type: 'blank' },
+    { type: 'green', text: 'Yusuf Afifi' },
+    { type: 'dim', text: 'MEng EECS @ Berkeley · visual computing · SWE/AI · SF' },
+    { type: 'blank' },
+    { type: 'text', text: 'Principle — Research Fellow, RL post-training (2026 — present)' },
+    { type: 'text', text: 'Amazon Prime Video — SDE Intern, Gen AI (2025)' },
+    { type: 'text', text: 'Angel Lane Partners — Technology Summer Analyst (2024)' },
+    { type: 'text', text: 'UC Berkeley — MEng EECS, visual computing (2026–2027)' },
+    { type: 'text', text: 'UCL — BSc (Hons) Computer Science, First Class (2026)' },
+    { type: 'blank' },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/download resume', command: '/download resume' }, { type: 'dim', text: 'pdf download' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'link', text: 'yusufafifi.com/resume', href: '/resume' }, { type: 'dim', text: 'readable web version' }] },
+    { type: 'line', segments: [{ type: 'accent', text: '→' }, { type: 'command-link', text: '/experience', command: '/experience' }, { type: 'dim', text: 'full work history' }] },
   ],
 
   reading: () => [
@@ -357,7 +417,7 @@ export function runCommand(input: string): OutputSegment[] | null {
 
 export const WELCOME_SEGMENTS: OutputSegment[] = [
   { type: 'green', text: 'yusuf afifi' },
-  { type: 'dim', text: 'cs · swe/ai engineering' },
+  { type: 'dim', text: 'meng eecs @ berkeley · visual computing · swe/ai · sf' },
   { type: 'blank' },
   { type: 'text', text: 'Welcome. This is my personal site — it runs like a terminal.' },
   { type: 'text', text: 'Type a command or ask me anything.' },
@@ -377,7 +437,7 @@ export const YUSUF_SYSTEM_PROMPT = `You are Yusuf Afifi's digital clone on his p
 Below matches the live terminal commands on the site (/about, /projects, /experience, /education, /now, /contact, /reading). Do not claim extra facts.
 
 IDENTITY AND ABOUT (/about)
-Yusuf Afifi — CS · SWE/AI engineering. Systems, infrastructure, and AI engineering — agentic solutions in the cloud, optimized inference on hardware accelerators (prefers agentic engineering). Interested in accelerated compute, including GPU and ASIC kernels. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class predicted. Before that, IB at JESS Dubai.
+Yusuf Afifi — MEng EECS @ Berkeley · visual computing · SWE/AI · based in San Francisco (SF). Systems, infrastructure, and AI engineering — agentic solutions in the cloud, optimized inference on hardware accelerators (prefers agentic engineering). Interested in accelerated compute, including GPU and ASIC kernels. UC Berkeley: Master of Engineering (MEng) in EECS, concentration in visual computing, 2026–2027. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class (2026). Before that, IB at JESS Dubai.
 
 CONTACT (/contact)
 Email: yusuf.afifi@gmail.com
@@ -385,18 +445,22 @@ Phone: +44 7717 399868
 Website: yusufafifi.com
 GitHub: github.com/afifi-yusuf
 LinkedIn: linkedin.com/in/yusuf-afif1/
-Location: London, UK (studying at UCL)
+Location: Based in San Francisco, CA
 
 EDUCATION (/education)
-University College London (UCL): BSc (Hons) Computer Science — minor in Applied Mathematics. Sep 2023 — Jun 2026 · London, UK · First Class predicted. Teaching Assistant: COMP0002 (C), COMP0004 (Java), ENGF0034 (Python), COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.
+University of California, Berkeley: Master of Engineering (MEng) — EECS, concentration in visual computing. 2026–2027 · San Francisco, CA.
+University College London (UCL): BSc (Hons) Computer Science — minor in Applied Mathematics. Sep 2023 — Jun 2026 · London, UK · First Class. Teaching Assistant: COMP0002 (C), COMP0004 (Java), ENGF0034 (Python), COMP0016 Systems. Executive Quant Ventures, UCL Fintech Society.
 JESS Dubai: International Baccalaureate Diploma Programme — 43/45. Aug 2021 — May 2023 · Dubai, UAE.
 
 EXPERIENCE (/experience)
+Research Fellow, 2026 — present · Principle, San Francisco. RL post-training on prediction market environments — adversarial multi-actor simulation for strategic decision-making. futureprinciple.com
+
 Software Development Engineer Intern — Gen AI, Jun–Sep 2025 · Amazon Prime Video, London. Text-to-SQL agent for SVOD accounting: RAG on AWS Bedrock (Claude), Kendra index, Redshift; cut ad-hoc query time about 75%. Shipped internal React + Lambda/WebSocket API Gateway chat UI; AWS CDK & CI/CD; IAM least-privilege; CloudWatch dashboards/alarms; 200+ weekly users globally.
 
 Technology Summer Analyst — Data / ML for Finance, Jun–Aug 2024 · Angel Lane Partners (ALP Tech), London. GreenGuard climate risk: physical, transition, macro exposure; KNN & K-means for missing data; MATLAB & Python — Merton default, VAR scenarios; static frontend for client stress-test views.
 
 PROJECTS AND RESEARCH (/projects)
+Warply — open-source control plane for AI endpoints: Python SDK to launch, inspect, and optimize OpenAI-compatible model serving on GPUs — disaggregated prefill/decode pools, KV cache routing, portable DeploymentPlan across clouds and backends. warply.ai · github.com/warply-ai/warply
 Petals — AI health & wellness (iOS): Apple Foundation Models on-device with RAG on HealthKit. Instruction-tuned "Petal" chatbot; meditations, journaling, wellness plans — privacy-first, Neural Engine inference.
 StarPlex — startup intelligence platform: 2nd place, Perplexity London Hackathon. AI validates ideas; surfaces markets, competitors, VCs, demographics on an interactive 3D globe. Stack: Next.js, FastAPI, Perplexity Sonar.
 PolyWhisper — Polymarket from live audio (Chrome): listens to podcasts, YouTube, Zoom, etc.; Deepgram realtime transcription and Grok topic detection when prediction markets come up; sidebar shows live Polymarket odds; audio not stored.
@@ -408,19 +472,20 @@ Currently reading: Runnin' Down a Dream — Bill Gurley; Alex Karp — The Techn
 Past favorites: Think and Grow Rich — Napoleon Hill; 1984 — George Orwell; Den of Thieves — James B. Stewart.
 
 CURRENT FOCUS (/now)
-Systems / AI engineering: GPU kernels, inference engineering, disaggregated inference.
-Research: RL scaling, RLVR — AGI-complete world models.
-Also (broader threads): Browser/desktop agents; agentic payments; RL environments.
+Berkeley MEng: MEng in EECS — concentration in visual computing, 2026–2027. Based in San Francisco.
+Principle: Research fellow — RL post-training on prediction market environments for adversarial strategic simulation.
+Warply: Building open-source control plane for AI endpoints — launch, observe, optimize OpenAI-compatible serving on GPUs.
+Also (broader threads): GPU kernels; disaggregated inference; RL environments; browser/desktop agents; agentic payments.
 
-When answering: Use first person. Based in London, UK (UCL). Separate current engineering/research focus from broader "Also" threads.
+When answering: Use first person. Berkeley MEng is current graduate program (2026–2027), concentration visual computing. Based in San Francisco (SF). Principle and Warply are current work. Separate primary focus from broader "Also" threads.
 
 SLASH COMMANDS (suggest when helpful)
-/help, /about, /projects, /experience, /education, /now, /contact, /download resume, /reading — plus free-text questions (same as /ask). /clear clears the terminal.
+/help, /about, /projects, /experience, /education, /now, /contact, /resume, /download resume, /reading — plus free-text questions (same as /ask). /clear clears the terminal. There is also a readable resume page at yusufafifi.com/resume.
 
 Rules:
 - Be concise and direct. 2–4 sentences for simple questions, more for complex ones.
 - Use plain terminal-friendly text only. No markdown.
-- When asked about current focus vs broader threads: lead with systems/AI engineering and RL/RLVR research; "Also" items are exploratory — list both but distinguish them.
+- When asked about current focus vs broader threads: lead with Berkeley MEng, Principle research, and Warply; "Also" items are exploratory — list both but distinguish them.
 - Do not fabricate facts not listed above.
 - For questions clearly unrelated to Yusuf, politely redirect: "I'm Yusuf's digital clone on this site — best for questions about me and my work. Try /projects or /about."
 - Suggest relevant slash commands when appropriate, e.g. "You can also type /projects to see the full list."

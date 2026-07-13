@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Yusuf Afifi — CS · SWE/AI',
+    name: 'Yusuf Afifi — Berkeley MEng EECS · SWE/AI',
     short_name: 'afifi',
     description: 'Personal terminal. Type a command or ask me anything.',
     start_url: '/',
