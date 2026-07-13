@@ -70,9 +70,9 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'green', text: 'Yusuf Afifi' },
     { type: 'dim', text: 'MEng EECS @ Berkeley · visual computing · SWE/AI · SF' },
     { type: 'blank' },
-    { type: 'text', text: 'Systems, infrastructure, and AI engineering — agentic solutions in' },
-    { type: 'text', text: 'the cloud, optimized inference on accelerators (I prefer agentic engineering).' },
-    { type: 'text', text: 'Interested in accelerated compute — GPU and ASIC kernels.' },
+    { type: 'text', text: 'I build AI systems end to end — agents that ship to real people,' },
+    { type: 'text', text: 'and the inference infrastructure that makes them fast.' },
+    { type: 'text', text: 'Happiest close to the metal: GPU and ASIC kernels.' },
     { type: 'blank' },
     { type: 'text', text: 'UC Berkeley — Master of Engineering (MEng) in EECS, concentration' },
     { type: 'text', text: 'in visual computing, 2026–2027.' },
@@ -151,7 +151,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'green', text: 'ReadingStar — accessibility karaoke (Windows)' },
     { type: 'text', text: 'With Intel & National Autistic Society: offline speech-to-text, lyric' },
     { type: 'text', text: 'alignment, scoring; React Native Windows + FastAPI, Whisper, OpenVINO' },
-    { type: 'text', text: 'on NPU. National school rollout; Intel featured as first education NPU app.' },
+    { type: 'text', text: 'on NPU. National school rollout — Intel\'s first education NPU app.' },
     { type: 'line', segments: [{ type: 'tag', text: '[React Native]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[FastAPI]' }, { type: 'text', text: ' ' }, { type: 'tag', text: '[Whisper]' }] },
     {
       type: 'line',
@@ -237,11 +237,10 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'text', text: 'environments for adversarial strategic simulation.' },
     { type: 'blank' },
     { type: 'green', text: 'Warply' },
-    { type: 'text', text: 'Building open-source control plane for AI endpoints — launch,' },
-    { type: 'text', text: 'observe, optimize OpenAI-compatible serving on GPUs.' },
+    { type: 'text', text: 'Building an open-source control plane for AI endpoints — launch,' },
+    { type: 'text', text: 'observe, and optimize OpenAI-compatible serving on GPUs.' },
     { type: 'blank' },
     { type: 'green', text: 'Also' },
-    { type: 'dim', text: 'Broader threads beyond the above.' },
     { type: 'text', text: 'GPU kernels; disaggregated inference; RL environments;' },
     { type: 'text', text: 'browser/desktop agents; agentic payments.' },
     { type: 'blank' },
@@ -252,7 +251,7 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'header', text: 'Get in Touch' },
     { type: 'blank' },
     { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'yusuf.afifi@gmail.com', href: 'mailto:yusuf.afifi@gmail.com' }] },
-    { type: 'line', segments: [{ type: 'accent', text: 'Email' }, { type: 'link', text: 'afifi@berkeley.edu', href: 'mailto:afifi@berkeley.edu' }] },
+    { type: 'line', segments: [{ type: 'accent', text: 'Berkeley' }, { type: 'link', text: 'afifi@berkeley.edu', href: 'mailto:afifi@berkeley.edu' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'Phone' }, { type: 'link', text: '+44 7717 399868', href: 'tel:+447717399868' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'Site' }, { type: 'link', text: 'yusufafifi.com', href: 'https://yusufafifi.com' }] },
     { type: 'line', segments: [{ type: 'accent', text: 'GitHub' }, { type: 'link', text: 'github.com/afifi-yusuf', href: 'https://github.com/afifi-yusuf' }] },
@@ -284,8 +283,8 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
     { type: 'header', text: 'Currently Reading' },
     { type: 'blank' },
     { type: 'text', text: '• Runnin\' Down a Dream — Bill Gurley' },
-    { type: 'text', text: '• Alex Karp — The Technological Republic' },
-    { type: 'text', text: '• Ray Dalio — Principles' },
+    { type: 'text', text: '• The Technological Republic — Alexander Karp' },
+    { type: 'text', text: '• Principles — Ray Dalio' },
     { type: 'blank' },
     { type: 'green', text: 'Past favorites' },
     { type: 'text', text: '• Think and Grow Rich — Napoleon Hill' },
@@ -438,7 +437,7 @@ export const YUSUF_SYSTEM_PROMPT = `You are Yusuf Afifi's digital clone on his p
 Below matches the live terminal commands on the site (/about, /projects, /experience, /education, /now, /contact, /reading). Do not claim extra facts.
 
 IDENTITY AND ABOUT (/about)
-Yusuf Afifi — MEng EECS @ Berkeley · visual computing · SWE/AI · based in San Francisco (SF). Systems, infrastructure, and AI engineering — agentic solutions in the cloud, optimized inference on hardware accelerators (prefers agentic engineering). Interested in accelerated compute, including GPU and ASIC kernels. UC Berkeley: Master of Engineering (MEng) in EECS, concentration in visual computing, 2026–2027. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class (2026). Before that, IB at JESS Dubai.
+Yusuf Afifi — MEng EECS @ Berkeley · visual computing · SWE/AI · based in San Francisco (SF). Builds AI systems end to end — agents that ship to real people, and the inference infrastructure that makes them fast. Happiest close to the metal: GPU and ASIC kernels. UC Berkeley: Master of Engineering (MEng) in EECS, concentration in visual computing, 2026–2027. UCL, London — BSc (Hons) Computer Science, minor in Applied Mathematics, First Class (2026). Before that, IB at JESS Dubai.
 
 CONTACT (/contact)
 Email: yusuf.afifi@gmail.com
@@ -470,7 +469,7 @@ ReadingStar — accessibility karaoke (Windows): with Intel & National Autistic 
 ML for fluid dynamics (research): undergrad research with Imperial College Research Associate; convolutional autoencoder for shallow-water simulation, LSTM in latent space, TensorFlow.
 
 READING (/reading)
-Currently reading: Runnin' Down a Dream — Bill Gurley; Alex Karp — The Technological Republic; Ray Dalio — Principles.
+Currently reading: Runnin' Down a Dream — Bill Gurley; The Technological Republic — Alexander Karp; Principles — Ray Dalio.
 Past favorites: Think and Grow Rich — Napoleon Hill; 1984 — George Orwell; Den of Thieves — James B. Stewart.
 
 CURRENT FOCUS (/now)
