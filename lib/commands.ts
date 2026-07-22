@@ -282,6 +282,8 @@ const COMMANDS: Record<string, () => OutputSegment[]> = {
   reading: () => [
     { type: 'header', text: 'Currently Reading' },
     { type: 'blank' },
+    { type: 'text', text: '• Inference Engineering — Philip Kiely' },
+    { type: 'text', text: '• Our Mathematical Universe — Max Tegmark' },
     { type: 'text', text: '• Runnin\' Down a Dream — Bill Gurley' },
     { type: 'text', text: '• The Technological Republic — Alexander Karp' },
     { type: 'text', text: '• Principles — Ray Dalio' },
@@ -469,7 +471,7 @@ ReadingStar — accessibility karaoke (Windows): with Intel & National Autistic 
 ML for fluid dynamics (research): undergrad research with Imperial College Research Associate; convolutional autoencoder for shallow-water simulation, LSTM in latent space, TensorFlow.
 
 READING (/reading)
-Currently reading: Runnin' Down a Dream — Bill Gurley; The Technological Republic — Alexander Karp; Principles — Ray Dalio.
+Currently reading: Inference Engineering — Philip Kiely; Our Mathematical Universe — Max Tegmark; Runnin' Down a Dream — Bill Gurley; The Technological Republic — Alexander Karp; Principles — Ray Dalio.
 Past favorites: Think and Grow Rich — Napoleon Hill; 1984 — George Orwell; Den of Thieves — James B. Stewart.
 
 CURRENT FOCUS (/now)

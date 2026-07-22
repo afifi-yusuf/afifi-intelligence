@@ -1,4 +1,4 @@
-export const RESUME_PDF_HREF = '/Yusuf%20Resume.pdf'
+export const RESUME_PDF_HREF = '/Yusuf_s_Resume%20(1)%20copy.pdf'
 export const RESUME_PDF_DOWNLOAD = 'Yusuf_Afifi_Resume.pdf'
 
 export function triggerResumeDownload() {
