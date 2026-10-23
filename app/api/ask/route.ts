@@ -1,11 +1,13 @@
 import Groq from 'groq-sdk'
-import { YUSUF_SYSTEM_PROMPT } from '@/lib/commands'
-import { findSkill } from '@/lib/skills'
+import { ASK_SYSTEM_PROMPT } from '@/lib/ask-prompt'
 
 export const maxDuration = 30
 
-const DEFAULT_MODEL = 'openai/gpt-oss-20b'
-const MAX_QUESTION_CHARS = 2000
+const DEFAULT_MODEL = 'qwen/qwen3.8-27b'
+const MAX_MESSAGE_CHARS = 2000
+const MAX_TURNS = 8
+const RATE_LIMIT = 20
+const RATE_WINDOW_MS = 10 * 60 * 1000
 
 const ALLOWED_ORIGINS = new Set([
   'https://yusufafifi.com',
@@ -21,6 +23,23 @@ function isAllowedOrigin(origin: string | null): boolean {
   return false
 }
 
+// Best-effort per-IP limit. State lives per serverless instance, so this caps
+// bursts from one client rather than enforcing a global quota.
+const hits = new Map<string, number[]>()
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now()
+  const recent = (hits.get(ip) ?? []).filter(t => now - t < RATE_WINDOW_MS)
+  if (recent.length >= RATE_LIMIT) {
+    hits.set(ip, recent)
+    return true
+  }
+  recent.push(now)
+  hits.set(ip, recent)
+  if (hits.size > 5000) hits.clear()
+  return false
+}
+
 function jsonError(code: string, message: string, status: number) {
   return new Response(JSON.stringify({ error: message, code }), {
     status,
@@ -28,19 +47,36 @@ function jsonError(code: string, message: string, status: number) {
   })
 }
 
+type Turn = { role: 'user' | 'assistant'; content: string }
+
+function parseMessages(body: unknown): Turn[] | null {
+  const raw = (body as { messages?: unknown })?.messages
+  if (!Array.isArray(raw) || raw.length === 0) return null
+  const turns: Turn[] = []
+  for (const m of raw.slice(-MAX_TURNS)) {
+    const role = (m as Turn)?.role
+    const content = (m as Turn)?.content
+    if ((role !== 'user' && role !== 'assistant') || typeof content !== 'string') return null
+    turns.push({ role, content: content.trim().slice(0, MAX_MESSAGE_CHARS) })
+  }
+  if (turns[turns.length - 1].role !== 'user' || !turns[turns.length - 1].content) return null
+  return turns
+}
+
 export async function POST(req: Request) {
   if (!isAllowedOrigin(req.headers.get('origin'))) {
-    return jsonError(
-      'FORBIDDEN_ORIGIN',
-      'This endpoint is only callable from yusufafifi.com.',
-      403
-    )
+    return jsonError('FORBIDDEN_ORIGIN', 'This endpoint is only callable from yusufafifi.com.', 403)
+  }
+
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  if (rateLimited(ip)) {
+    return jsonError('RATE_LIMITED', "That's a lot of questions. Try again in a few minutes, or just email me.", 429)
   }
 
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey?.trim()) {
     console.error('[ask route] Missing GROQ_API_KEY')
-    return jsonError('SERVER_MISCONFIG', 'GROQ_API_KEY is not configured.', 500)
+    return jsonError('SERVER_MISCONFIG', 'The chat is not configured right now.', 500)
   }
 
   let payload: unknown
@@ -50,29 +86,10 @@ export async function POST(req: Request) {
     return jsonError('BAD_JSON', 'Invalid JSON body.', 400)
   }
 
-  const body = payload as { question?: unknown; skillId?: unknown }
-  const question = typeof body?.question === 'string' ? body.question.trim() : ''
-  const requestedSkillId =
-    typeof body?.skillId === 'string' && body.skillId.length <= 32
-      ? body.skillId.trim()
-      : ''
-
-  if (!question) {
-    return jsonError('EMPTY_QUESTION', 'Question is required.', 400)
+  const messages = parseMessages(payload)
+  if (!messages) {
+    return jsonError('BAD_MESSAGES', 'Expected a non-empty conversation ending with a question.', 400)
   }
-
-  if (question.length > MAX_QUESTION_CHARS) {
-    return jsonError(
-      'QUESTION_TOO_LONG',
-      `Question too long (max ${MAX_QUESTION_CHARS} characters).`,
-      413
-    )
-  }
-
-  const skill = requestedSkillId ? findSkill(requestedSkillId) : undefined
-  const systemPrompt = skill?.prompt
-    ? `${YUSUF_SYSTEM_PROMPT}\n\n${skill.prompt}`
-    : YUSUF_SYSTEM_PROMPT
 
   try {
     const groq = new Groq({ apiKey })
@@ -81,10 +98,7 @@ export async function POST(req: Request) {
     const stream = await groq.chat.completions.create(
       {
         model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: question },
-        ],
+        messages: [{ role: 'system', content: ASK_SYSTEM_PROMPT }, ...messages],
         max_tokens: 800,
         temperature: 0.5,
         stream: true,
@@ -124,11 +138,10 @@ export async function POST(req: Request) {
       },
     })
   } catch (error) {
+    if (error instanceof Groq.APIError && error.status === 429) {
+      return jsonError('UPSTREAM_BUSY', "Lots of questions right now. Try again in a minute, or just email me.", 429)
+    }
     console.error('[ask route] Error:', error)
-    return jsonError(
-      'UPSTREAM_ERROR',
-      "Couldn't reach the AI right now. Try a /command instead, or come back later.",
-      502
-    )
+    return jsonError('UPSTREAM_ERROR', "Couldn't reach the model right now. Try again later, or email me.", 502)
   }
 }

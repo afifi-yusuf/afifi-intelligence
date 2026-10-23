@@ -2,27 +2,17 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Yusuf Afifi — Berkeley MEng EECS · SWE/AI',
+    name: 'Yusuf Afifi',
     short_name: 'afifi',
-    description: 'Personal terminal. Type a command or ask me anything.',
+    description: 'MEng EECS at UC Berkeley · Sky Computing Lab. RL post-training, agent execution, model serving.',
     start_url: '/',
     scope: '/',
-    display: 'standalone',
-    orientation: 'portrait',
-    background_color: '#0a0a0a',
-    theme_color: '#0a0a0a',
+    display: 'browser',
+    background_color: '#fbfaf6',
+    theme_color: '#fbfaf6',
     icons: [
-      {
-        src: '/app-icon.jpg',
-        sizes: '512x512',
-        type: 'image/jpeg',
-        purpose: 'any',
-      },
-      {
-        src: '/apple-touch-icon.jpg',
-        sizes: '180x180',
-        type: 'image/jpeg',
-      },
+      { src: '/icon-192.png?v=3', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/icon-512.png?v=3', sizes: '512x512', type: 'image/png', purpose: 'any' },
     ],
   }
 }
