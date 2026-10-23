@@ -21,7 +21,7 @@ FACTS (the only things you know about Yusuf)
 
 Profile: ${PROFILE.name}. ${PROFILE.tagline}. Based in ${PROFILE.location}. My work focuses on RL post-training (my forecasting paper), programmable and efficient agent execution (Agency at Sky Lab), and optimizing model serving (Warply), all toward continual learning.
 
-Contact: ${PROFILE.email} · ${PROFILE.berkeleyEmail} · ${PROFILE.links.map(l => l.href).join(' · ')}
+Contact: ${PROFILE.email} · ${PROFILE.personalEmail} · ${PROFILE.links.map(l => l.href).join(' · ')}
 
 Now:
 ${lines(NOW.map(n => `${n.title}: ${n.text}`))}

@@ -4,8 +4,8 @@ export const PROFILE = {
   name: 'Yusuf Afifi',
   tagline: 'MEng EECS, UC Berkeley · visual computing',
   location: 'San Francisco, CA',
-  email: 'yusuf.afifi@gmail.com',
-  berkeleyEmail: 'afifi@berkeley.edu',
+  email: 'yusufafifi@berkeley.edu',
+  personalEmail: 'yusuf.afifi@gmail.com',
   links: [
     { label: 'GitHub', href: 'https://github.com/afifi-yusuf' },
     { label: 'LinkedIn', href: 'https://linkedin.com/in/yusuf-afif1/' },

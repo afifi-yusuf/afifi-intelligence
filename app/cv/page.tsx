@@ -26,7 +26,7 @@ export default function CvPage() {
           <dd>
             <A href={`mailto:${PROFILE.email}`}>{PROFILE.email}</A>
             <span className="text-muted"> · </span>
-            <A href={`mailto:${PROFILE.berkeleyEmail}`}>{PROFILE.berkeleyEmail}</A>
+            <A href={`mailto:${PROFILE.personalEmail}`}>{PROFILE.personalEmail}</A>
           </dd>
           {PROFILE.links.map(l => (
             <div key={l.href} className="contents">
