@@ -26,7 +26,9 @@ export default function AboutPage() {
                 I&apos;m an MEng student in EECS at <A href="https://eecs.berkeley.edu">UC Berkeley</A>,
                 concentrating in visual computing. I do research in the{' '}
                 <A href="https://sky.cs.berkeley.edu">Sky Computing Lab</A>{' '}
-                on agent efficiency for production workloads, and I&apos;m a research fellow at{' '}
+                on agent efficiency for production workloads, advised by{' '}
+                <A href="https://people.eecs.berkeley.edu/~akcheung/">Alvin Cheung</A>, and I&apos;m a
+                research fellow at{' '}
                 <A href="https://futureprinciple.com">Principle</A>, where I work on RL post-training
                 in prediction market environments.
               </p>

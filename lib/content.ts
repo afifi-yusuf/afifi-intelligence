@@ -19,7 +19,7 @@ export const NOW: { title: string; text: string; href?: string }[] = [
   },
   {
     title: 'Sky Lab',
-    text: 'Research in the Berkeley Sky Computing Lab on agent efficiency for production workloads.',
+    text: 'Research in the Berkeley Sky Computing Lab on agent efficiency for production workloads, advised by Alvin Cheung.',
     href: 'https://sky.cs.berkeley.edu',
   },
   {
@@ -58,7 +58,7 @@ export const PUBLICATIONS: Publication[] = [
     ],
     venue: 'NeurIPS 2026 Workshop on Foundation Models for Temporal Systems (FMTS)',
     summary:
-      'RLVR with web search in the loop for prediction market forecasting. An agentic environment built from 2,100+ resolved Polymarket questions, where the model gathers its own evidence behind leak filters; GRPO training of Qwen3.5-35B-A3B on a Brier-score reward improves calibration, cuts searches per rollout, and outperforms four frontier models at a fraction of the inference cost.',
+      'RLVR with web search in the loop for prediction market forecasting. An agentic environment built from 2,100+ resolved Polymarket questions, where the model gathers its own evidence behind leak filters; single-epoch GRPO on Qwen3.5-35B-A3B with a Brier-score reward cuts calibration error (ECE) 31% and searches per rollout from 3.8 to 2.25, and outperforms four frontier models, including Claude Opus 4.5, at about 5% of its inference cost.',
     note: 'Work done at Principle.',
     links: [
       { label: 'arXiv', href: 'https://arxiv.org/abs/2610.01955' },
@@ -83,7 +83,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Running, profiling, and debugging AI agent workflows',
     description:
       'Open-source platform from the Berkeley Sky Computing Lab for running concurrent agents across harnesses (Claude Code, Codex, OpenCode) and models (OpenAI, Anthropic, vLLM). Live view of model requests and tool calls, pause and resume, replay and mock-LLM testing, and a critical-path profiler across LLM, tool, and system time.',
-    note: 'Contributor, as part of my Sky Lab research.',
+    note: 'Part of my Sky Lab research, advised by Alvin Cheung.',
     tags: ['Agents', 'Profiling', 'Open source'],
     links: [
       { label: 'code', href: 'https://github.com/agency-project/agency' },
@@ -106,7 +106,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Context-enriched multi-agent deep RL for algorithmic trading',
     description:
       'My UCL final-year dissertation, supervised by Yun Fu. Four LLM agents turn earnings-call transcripts into structured signals over a Neo4j causal-temporal knowledge graph, and a dual-stream DQN fuses them with price features through attention and gating.',
-    note: 'In walk-forward backtests (Jan 2024 – Feb 2026): about 10% alpha over the S&P 500, and LLM context raised cumulative returns by 12%.',
+    note: 'In a walk-forward test (Jan 2024 – Feb 2026): 64.6% mean cumulative return vs 45.5% for the S&P 500, with LLM signals adding 22.4 points over a price-only version and winning on 8 of 9 tickers.',
     tags: ['Deep RL', 'LLM agents', 'Knowledge graphs'],
     links: [
       { label: 'report', href: '/intellitrade.pdf' },
@@ -125,8 +125,8 @@ export const PROJECTS: Project[] = [
     title: 'ReadingStar',
     subtitle: 'Accessibility karaoke for Windows',
     description:
-      'With Intel and the National Autistic Society: offline speech-to-text, lyric alignment, and scoring. React Native Windows and FastAPI, Whisper, OpenVINO on NPU. Rolled out nationally to schools.',
-    note: 'Featured by Intel as its first education NPU app.',
+      'Offline karaoke app built with Intel and the National Autistic Society for speech development in neurodiverse students. I owned the speech model: real-time, fully offline Whisper, exported to ONNX and quantized to INT8 with OpenVINO, running on the Intel NPU at 88% less energy per inference than CPU. Distributed to UK schools.',
+    note: 'The first education app optimized for NPUs, and featured by Intel.',
     tags: ['React Native', 'Whisper', 'OpenVINO'],
     links: [
       {
