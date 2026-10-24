@@ -22,7 +22,7 @@ const mono = IBM_Plex_Mono({
 const SITE_URL = 'https://yusufafifi.com'
 const SITE_TITLE = 'Yusuf Afifi'
 const SITE_DESC =
-  'MEng EECS student at UC Berkeley (visual computing), researching agent efficiency in the Sky Computing Lab, and research fellow at Principle.'
+  'MEng EECS student at UC Berkeley, researching agent efficiency in the Sky Computing Lab, and research fellow at Principle.'
 
 export const viewport: Viewport = {
   width: 'device-width',

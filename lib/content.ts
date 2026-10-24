@@ -2,7 +2,7 @@ export type Link = { label: string; href: string }
 
 export const PROFILE = {
   name: 'Yusuf Afifi',
-  tagline: 'MEng EECS, UC Berkeley · visual computing',
+  tagline: 'MEng EECS, UC Berkeley',
   location: 'San Francisco, CA',
   email: 'yusufafifi@berkeley.edu',
   personalEmail: 'yusuf.afifi@gmail.com',
@@ -15,7 +15,7 @@ export const PROFILE = {
 export const NOW: { title: string; text: string; href?: string }[] = [
   {
     title: 'UC Berkeley',
-    text: 'MEng in EECS with a concentration in visual computing, 2026–2027.',
+    text: 'MEng in EECS, 2026–2027.',
   },
   {
     title: 'Sky Lab',
@@ -106,7 +106,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Context-enriched multi-agent deep RL for algorithmic trading',
     description:
       'My UCL final-year dissertation, supervised by Yun Fu. Four LLM agents turn earnings-call transcripts into structured signals over a Neo4j causal-temporal knowledge graph, and a dual-stream DQN fuses them with price features through attention and gating.',
-    note: 'In a walk-forward test (Jan 2024 – Feb 2026): 64.6% mean cumulative return vs 45.5% for the S&P 500, with LLM signals adding 22.4 points over a price-only version and winning on 8 of 9 tickers.',
+    note: 'In a walk-forward test (Jan 2024 – Feb 2026), LLM signals lifted mean Sharpe from 1.47 to 1.91 and added 22.4 points of return over a price-only version, winning on 8 of 9 tickers.',
     tags: ['Deep RL', 'LLM agents', 'Knowledge graphs'],
     links: [
       { label: 'report', href: '/intellitrade.pdf' },
@@ -252,7 +252,7 @@ export type School = {
 export const EDUCATION: School[] = [
   {
     name: 'University of California, Berkeley',
-    degree: 'Master of Engineering (MEng), EECS · concentration in visual computing',
+    degree: 'Master of Engineering (MEng), EECS',
     dates: '2026 – 2027',
     place: 'Berkeley, CA',
   },

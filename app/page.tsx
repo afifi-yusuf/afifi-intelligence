@@ -23,8 +23,8 @@ export default function AboutPage() {
 
             <div className="mt-6 space-y-4">
               <p>
-                I&apos;m an MEng student in EECS at <A href="https://eecs.berkeley.edu">UC Berkeley</A>,
-                concentrating in visual computing. I do research in the{' '}
+                I&apos;m an MEng student in EECS at <A href="https://eecs.berkeley.edu">UC Berkeley</A>. I
+                do research in the{' '}
                 <A href="https://sky.cs.berkeley.edu">Sky Computing Lab</A>{' '}
                 on agent efficiency for production workloads, advised by{' '}
                 <A href="https://people.eecs.berkeley.edu/~akcheung/">Alvin Cheung</A>, and I&apos;m a
